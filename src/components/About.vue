@@ -25,8 +25,10 @@ export default {
   data() {
     return {
       interests: [
+        "JavaScript, TypeScript",
         "Single Page Application, React.js, Vue.js,",
-        "Serverless Architecture"
+        "Serverless Architecture",
+        "Docker, Github Action"
       ]
     };
   }

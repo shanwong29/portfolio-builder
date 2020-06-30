@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div id="contact">
+    <h1>Contact Me</h1>
     <a :href="githubUrl" target="_blank" rel="noopener noreferrer">
       <i class="fab fa-github"></i>
     </a>
