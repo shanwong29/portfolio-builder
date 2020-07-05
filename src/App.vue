@@ -1,40 +1,18 @@
 <template>
   <div id="app">
     <Navbar />
-    <About v-bind:profilePicUrl="profilePicUrl" />
-    <Projects v-bind:githubData="githubData" />
-    <Contact v-bind:githubUrl="githubUrl" />
+
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import Navbar from "./components/Navbar";
-import About from "./components/About";
-import Projects from "./components/Projects";
-import Contact from "./components/Contact";
-import axios from "axios";
+
 export default {
   //is an object
   name: "App",
-  components: { Navbar, About, Projects, Contact },
-  data() {
-    return {
-      githubData: [], //unlike react, all states need to be initialized here before used
-      profilePicUrl: "",
-      githubUrl: ""
-    };
-  },
-
-  async created() {
-    const { data } = await axios.get(
-      "https://api.github.com/users/shanwong29/repos?sort=created&direction=desc"
-    );
-
-    this.githubData = data.filter(el => el.fork === false);
-
-    this.profilePicUrl = data[data.length - 1].owner.avatar_url;
-    this.githubUrl = data[data.length - 1].owner.html_url;
-  }
+  components: { Navbar }
 };
 </script>
 
