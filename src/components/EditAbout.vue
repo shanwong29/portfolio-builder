@@ -30,36 +30,30 @@ import { db } from "../firebase/init";
 export default {
   data() {
     return {
-      docId: "",
-      name: "",
-      bio: "",
-      description: "",
-      interestToBeAdded: "",
-      modifiedInterests: []
+      name: this.firestoreBasicInfo.name,
+      bio: this.firestoreBasicInfo.bio,
+      description: this.firestoreBasicInfo.description,
+      modifiedInterests: [...this.firestoreBasicInfo.interests],
+      docId: this.firestoreBasicInfo.docId,
+      interestToBeAdded: ""
     };
   },
   props: ["firestoreBasicInfo"],
-  async created() {
-    // console.log(this.firestoreBasicInfo.name);
-    // const { name, bio, description, interests, docId } = this.firebaseBasicInfo;
-    // console.log("?", name, bio, description, interests, docId);
-    this.name = this.firestoreBasicInfo.name;
-    this.bio = this.firestoreBasicInfo.bio;
-    this.description = this.firestoreBasicInfo.description;
-    this.modifiedInterests = this.firestoreBasicInfo.interests;
-    this.docId = this.firestoreBasicInfo.docId;
-  },
+
   methods: {
     updateAbout() {
       const docRef = db.collection("about").doc(this.docId);
 
       return docRef
-        .set({
-          name: this.name,
-          bio: this.bio,
-          description: this.description,
-          interests: this.modifiedInterests
-        })
+        .set(
+          {
+            name: this.name,
+            bio: this.bio,
+            description: this.description,
+            interests: this.modifiedInterests
+          },
+          { merge: true }
+        )
         .then(() => {
           console.log("successfully updated");
         });
