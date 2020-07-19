@@ -5,11 +5,11 @@
       <i class="fab fa-github"></i>
     </a>
 
-    <a href="https://www.linkedin.com/in/shanwong29/" target="_blank" rel="noopener noreferrer">
+    <a :href="firestoreBasicInfo.linkedin" target="_blank" rel="noopener noreferrer">
       <i class="fab fa-linkedin"></i>
     </a>
 
-    <a href="mailto:shan.wong29@gmail.com">
+    <a :href="firestoreBasicInfo.email">
       <i class="fas fa-envelope"></i>
     </a>
   </div>
@@ -19,7 +19,8 @@
 export default {
   name: "Contact",
   props: {
-    githubUrl: { type: String, required: true }
+    githubUrl: { type: String, required: true },
+    firestoreBasicInfo: { type: Object, required: true }
   }
 };
 </script>
