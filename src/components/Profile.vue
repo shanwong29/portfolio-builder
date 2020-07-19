@@ -1,10 +1,10 @@
 <template>
   <div>
-    <Navbar />
-    <About v-bind:profilePicUrl="profilePicUrl" />
-    <component :is="displayEditCmp" :firestoreBasicInfo="firestoreBasicInfo"></component>
+    <Navbar :isAdmin="isAdmin" />
+    <About v-bind:profilePicUrl="profilePicUrl" :firestoreBasicInfo="firestoreBasicInfo" />
+    <EditPopUp v-if="isAdmin" :firestoreBasicInfo="firestoreBasicInfo" />
     <Projects v-bind:githubData="githubData" />
-    <Contact v-bind:githubUrl="githubUrl" />
+    <Contact v-bind:githubUrl="githubUrl" :firestoreBasicInfo="firestoreBasicInfo" />
   </div>
 </template>
 
@@ -14,20 +14,20 @@ import Projects from "./Projects";
 import Contact from "./Contact";
 import Navbar from "./Navbar";
 import { auth, db } from "../firebase/init";
-import EditAbout from "./EditAbout";
+import EditPopUp from "./EditPopUp";
 
 import axios from "axios";
 
 export default {
   //is an object
-  components: { About, Projects, Contact, Navbar, EditAbout },
+  components: { About, Projects, Contact, Navbar, EditPopUp },
   data() {
     return {
       githubData: [], //unlike react, all states need to be initialized here before used
       profilePicUrl: "",
       githubUrl: "",
-      displayEditCmp: "",
-      firestoreBasicInfo: {}
+      firestoreBasicInfo: {},
+      isAdmin: false
     };
   },
 
@@ -44,7 +44,6 @@ export default {
 
     // get data from firestore
     const snapshot = await db.collection("about").get();
-
     snapshot.forEach(doc => {
       this.firestoreBasicInfo = doc.data();
       this.firestoreBasicInfo.docId = doc.id;
@@ -57,12 +56,11 @@ export default {
         console.log(user);
         user.getIdTokenResult().then(idTokenResult => {
           if (idTokenResult.claims.admin) {
-            this.displayEditCmp = "EditAbout";
+            this.isAdmin = true;
           }
-          //  user.admin = idTokenResult.claims.admin;
         });
       } else {
-        this.displayEditCmp = "";
+        this.isAdmin = false;
       }
     });
   }

@@ -1,16 +1,17 @@
 <template>
-  <div>
+  <nav>
     <a href="/#about">About</a>
     <a href="/#projects">Projects</a>
     <a href="/#contact">Contact</a>
-    <Button @click="logout">Logout</Button>
-  </div>
+    <Button v-if="isAdmin" @click="logout">Logout</Button>
+  </nav>
 </template>
 
 <script>
 import { auth } from "../firebase/init";
 export default {
   name: "Navbar",
+  props: ["isAdmin"],
   methods: {
     logout() {
       auth.signOut().then(() => {
@@ -22,7 +23,7 @@ export default {
 </script>
 
 <style scoped>
-div {
+nav {
   position: fixed;
   z-index: 1;
 }
