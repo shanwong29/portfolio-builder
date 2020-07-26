@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1 id="projects">Projects</h1>
+  <div id="projects">
+    <h1>Projects</h1>
     <div v-for="project in githubData" :key="project.id">
       <strong>{{ project.name }}</strong>
       <p>{{project.description}}</p>

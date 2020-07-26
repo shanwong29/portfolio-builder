@@ -1,13 +1,10 @@
 <template>
-  <form id="updateAbout">
-    <label for="name">Display Name</label>
-    <input type="text" id="name" v-model="name" />
+  <v-form ref="form" v-model="valid">
+    <v-text-field v-model="name" :rules="nameRules" label="Display Name" required></v-text-field>
 
-    <label for="name">One-line Bio</label>
-    <input type="text" id="bio" v-model="bio" />
+    <v-text-field v-model="bio" label="One-line Bio"></v-text-field>
 
-    <label for="name">Description</label>
-    <input type="text" id="description" v-model="description" />
+    <v-textarea name="input-7-1" label="Self introduction" :value="description"></v-textarea>
 
     <label for="text" id="interests">Interest</label>
     <div v-for="(modifiedInterest, index) in modifiedInterests" :key="index">
@@ -15,14 +12,21 @@
 
       <button @click.prevent="moveInterestUp(index)">up</button>
       <button @click.prevent="moveInterestDown(index)">down</button>
-      <button @click.prevent="deleteInterest(index)">del</button>
+
+      <v-btn icon color="error" @click="deleteInterest" class="mx-2">
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
     </div>
 
-    <input type="text" v-model="interestToBeAdded" />
-    <button @click.prevent="addInterest">Add Interest</button>
+    <div class="input-wrapper">
+      <v-text-field v-model="interestToBeAdded" label="Add Interest"></v-text-field>
 
-    <button @click.prevent="updateAbout">Submit</button>
-  </form>
+      <v-btn icon color="success" @click="addInterest" class="mx-2">
+        <v-icon>mdi-plus-circle-outline</v-icon>
+      </v-btn>
+    </div>
+    <v-btn color="primary" class="ma-2" dark @click="updateAbout">Save Changes</v-btn>
+  </v-form>
 </template>
 
 <script>
@@ -30,6 +34,8 @@ import { db } from "../firebase/init";
 export default {
   data() {
     return {
+      valid: false,
+      nameRules: [v => !!v || "Password is required"],
       name: this.firestoreBasicInfo.name,
       bio: this.firestoreBasicInfo.bio,
       description: this.firestoreBasicInfo.description,
@@ -86,5 +92,9 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.input-wrapper {
+  display: flex;
+  align-items: center;
+}
 </style>

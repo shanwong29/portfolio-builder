@@ -1,11 +1,10 @@
 <template>
-  <form @submit.prevent="updateContact">
-    <label for="url">Linkedin</label>
-    <input name="url" type="text" v-model="linkedin" required />
-    <label for="email">Email Address</label>
-    <input name="email" type="email" v-model="email" required />
-    <button>Submit</button>
-  </form>
+  <v-form ref="form" v-model="valid">
+    <v-text-field v-model="linkedin" :rules="urlRules" label="Linkedin" required></v-text-field>
+    <v-text-field v-model="email" :rules="emailRules" label="email"></v-text-field>
+
+    <v-btn color="primary" class="ma-2" dark @click="updateContact">Save Changes</v-btn>
+  </v-form>
 </template>
 
 <script>
@@ -15,7 +14,13 @@ export default {
   data() {
     return {
       email: "",
-      linkedin: ""
+      linkedin: "",
+      valid: false,
+      emailRules: [
+        v => !!v || "E-mail is required",
+        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      ],
+      urlRules: [v => !!v || "Url is required"]
     };
   },
   props: ["firestoreBasicInfo"],

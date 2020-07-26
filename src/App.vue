@@ -1,24 +1,23 @@
 <template>
-  <div id="app">
-    <router-view></router-view>
-  </div>
+  <v-app>
+    <Navbar />
+    <v-container fluid class="content">
+      <router-view></router-view>
+    </v-container>
+  </v-app>
 </template>
 
 <script>
+import Navbar from "./components/Navbar";
 export default {
-  //is an object
+  components: { Navbar },
   name: "App"
 };
 </script>
-
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
-  /* color: #fff; */
-  /* background: black; */
-  margin-top: 60px;
+@media (min-width: 600px) {
+  .content {
+    width: 70%;
+  }
 }
 </style>

@@ -1,14 +1,15 @@
 <template>
-  <div>
-    <Navbar :isAdmin="isAdmin" />
-    <About v-bind:profilePicUrl="profilePicUrl" :firestoreBasicInfo="firestoreBasicInfo" />
+  <div class="profile">
     <EditPopUp
       v-if="isAdmin"
       :firestoreBasicInfo="firestoreBasicInfo"
       :dbProjectsData="dbProjectsData"
       :githubData="githubData"
     />
+    <About v-bind:profilePicUrl="profilePicUrl" :firestoreBasicInfo="firestoreBasicInfo" />
+    <hr />
     <Projects v-bind:githubData="githubData" :dbProjectsData="dbProjectsData" />
+    <hr />
     <Contact v-bind:githubUrl="githubUrl" :firestoreBasicInfo="firestoreBasicInfo" />
   </div>
 </template>
@@ -17,7 +18,7 @@
 import About from "./About";
 import Projects from "./Projects";
 import Contact from "./Contact";
-import Navbar from "./Navbar";
+
 import { auth, db } from "../firebase/init";
 import EditPopUp from "./EditPopUp";
 
@@ -25,7 +26,7 @@ import axios from "axios";
 
 export default {
   //is an object
-  components: { About, Projects, Contact, Navbar, EditPopUp },
+  components: { About, Projects, Contact, EditPopUp },
   data() {
     return {
       githubData: [], //unlike react, all states need to be initialized here before used
@@ -81,4 +82,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.profile {
+  scroll-behavior: smooth;
+}
+</style>
