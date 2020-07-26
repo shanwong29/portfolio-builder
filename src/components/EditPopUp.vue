@@ -2,20 +2,26 @@
   <div>
     <nav>
       <button @click="setDisplayEditCmp('EditAbout')">About</button>
-      <!-- <button @click="setDisplayEditCmp('EditProjects')">Projects</button> -->
+      <button @click="setDisplayEditCmp('EditProjects')">Projects</button>
       <button @click="setDisplayEditCmp('EditContact')">Contact</button>
     </nav>
-    <component :is="displayEditCmp" :firestoreBasicInfo="firestoreBasicInfo"></component>
+    <component
+      :is="displayEditCmp"
+      :firestoreBasicInfo="firestoreBasicInfo"
+      :dbProjectsData="dbProjectsData"
+      :githubData="githubData"
+    ></component>
   </div>
 </template>
 
 <script>
 import EditAbout from "./EditAbout";
 import EditContact from "./EditContact";
+import EditProjects from "./EditProjects";
 
 export default {
-  components: { EditAbout, EditContact },
-  props: ["firestoreBasicInfo"],
+  components: { EditAbout, EditContact, EditProjects },
+  props: ["firestoreBasicInfo", "dbProjectsData", "githubData"],
   data() {
     return {
       displayEditCmp: "EditAbout"

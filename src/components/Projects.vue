@@ -5,10 +5,10 @@
       <strong>{{ project.name }}</strong>
       <p>{{project.description}}</p>
       <p>{{project.language}}</p>
+      <template v-if="dbProjectsData[project.id] && dbProjectsData[project.id]['stacks']">
+        <span v-for="(stack, index) in dbProjectsData[project.id]['stacks']" :key="index">{{stack}}</span>
+      </template>
 
-      <div>
-        <span v-for="(stack, index) in getStacksUsed(project.name)" :key="index">{{stack}}</span>
-      </div>
       <a :href="project.html_url" target="_blank" rel="noopener noreferrer">Code</a>
       <a :href="project.homepage" target="_blank" rel="noopener noreferrer">Live</a>
     </div>
@@ -18,17 +18,10 @@
 <script>
 export default {
   name: "Projects",
-  props: ["githubData"],
+  props: ["githubData", "dbProjectsData"],
   components: {},
-  methods: {
-    // a computed getter
-    getStacksUsed(projectName) {
-      if (this.stackLists[projectName]) {
-        return this.stackLists[projectName];
-      } else {
-        return [];
-      }
-    }
+  created() {
+    console.log(this.dbProjectsData);
   },
   data() {
     return {
