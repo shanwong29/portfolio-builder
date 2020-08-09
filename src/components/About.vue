@@ -15,20 +15,13 @@
 </template>
 
 <script>
-// import { db } from "../firebase/init";
+import { mapGetters, mapState } from "vuex";
+
 export default {
   name: "About",
-  props: {
-    profilePicUrl: { type: String, required: true },
-    firestoreBasicInfo: { type: Object }
-  },
-  data() {
-    return {
-      name: "",
-      bio: "",
-      description: "",
-      interests: []
-    };
+  computed: {
+    ...mapGetters(["profilePicUrl"]),
+    ...mapState(["firestoreBasicInfo"])
   }
 };
 </script>

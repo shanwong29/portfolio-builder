@@ -12,9 +12,11 @@ import { db } from "../firebase/init";
 
 export default {
   data() {
+    const { docId, linkedin, email } = this.$store.state.firestoreBasicInfo;
     return {
-      email: "",
-      linkedin: "",
+      docId,
+      email: email || "",
+      linkedin: linkedin || "",
       valid: false,
       emailRules: [
         v => !!v || "E-mail is required",
@@ -23,30 +25,23 @@ export default {
       urlRules: [v => !!v || "Url is required"]
     };
   },
-  props: ["firestoreBasicInfo"],
-  async created() {
-    this.linkedin = this.firestoreBasicInfo.linkedin;
-    this.email = this.firestoreBasicInfo.email;
-    this.docId = this.firestoreBasicInfo.docId;
-  },
-  methods: {
-    updateContact() {
-      const docRef = db.collection("about").doc(this.docId);
 
-      return docRef
-        .set(
+  methods: {
+    async updateContact() {
+      const docRef = db.collection("about").doc(this.docId);
+      try {
+        await docRef.set(
           {
             linkedin: this.linkedin,
             email: this.email
           },
           { merge: true }
-        )
-        .then(() => {
-          console.log("successfully updated");
-        })
-        .catch(err => {
-          console.log(err);
-        });
+        );
+        console.log("successfully updated");
+        this.$store.dispatch("getDbBasicInfo");
+      } catch (err) {
+        console.error();
+      }
     }
   }
 };

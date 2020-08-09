@@ -1,10 +1,16 @@
 <template>
   <v-expansion-panels focusable>
-    <v-expansion-panel v-for="project in githubData" :key="project.id">
+    <v-expansion-panel v-for="project in filteredGithubData" :key="project.id">
       <v-expansion-panel-header>{{project.name}}</v-expansion-panel-header>
 
       <v-expansion-panel-content>
-        <h5>Tech stacks</h5>
+        <div class="my-2">
+          <v-btn
+            small
+            @click="toggleShowProject(project.name, project.id)"
+          >{{dbProjectsData[project.id] && dbProjectsData[project.id]['hide']? `show`:`hide` }}</v-btn>
+        </div>
+        <h4>Tech stacks</h4>
         <template v-if="dbProjectsData[project.id]">
           <v-chip
             v-for="(stack, index) in dbProjectsData[project.id]['stacks']"
@@ -14,40 +20,28 @@
         <div class="input-wrapper">
           <v-text-field v-model="stackToBeAdded" label="Add Stack"></v-text-field>
 
-          <v-btn icon color="success" @click="addStack(project.name,project)" class="mx-2">
+          <v-btn icon color="success" @click="addStack(project.name,project.id)" class="mx-2">
             <v-icon>mdi-plus-circle-outline</v-icon>
           </v-btn>
         </div>
       </v-expansion-panel-content>
     </v-expansion-panel>
   </v-expansion-panels>
-
-  <!-- <div>
-    
-    <div v-for="project in githubData" :key="project.id">
-      <h3>{{project.name}}</h3>
-      <button
-        @click="toggleShowProject(project.name, project.id)"
-      >{{dbProjectsData[project.id] && dbProjectsData[project.id]['hide']? "show": "hide"}}</button>
-      <h5>Tech stacks</h5>
-      <template v-if="dbProjectsData[project.id]">
-        <span v-for="(stack, index) in dbProjectsData[project.id]['stacks']" :key="index">{{stack}}</span>
-      </template>
-      <input type="text" v-model="tsackToBeAdded" />
-      <button @click="addStack(project.name,project.id)">Add</button>
-    </div>
-  </div>-->
 </template>
 
 <script>
 import { db } from "../firebase/init";
+import { mapGetters, mapState } from "vuex";
 export default {
   name: "Projects",
-  props: ["githubData", "dbProjectsData"],
-  components: {},
-
-  created() {
-    console.log(this.dbProjectsData);
+  data() {
+    return {
+      stackToBeAdded: ""
+    };
+  },
+  computed: {
+    ...mapGetters(["filteredGithubData"]),
+    ...mapState(["dbProjectsData"])
   },
   methods: {
     async addStack(projectName, projectId) {
@@ -73,6 +67,8 @@ export default {
             ]
           });
         }
+        this.$store.dispatch("getDbProjects");
+        this.stackToBeAdded = "";
 
         console.log("stacks updated");
       } catch (err) {
@@ -92,19 +88,13 @@ export default {
       } else {
         await docRef.set(
           {
-            hide: false
+            hide: !this.dbProjectsData[projectId]["hide"]
           },
           { merge: true }
         );
       }
+      this.$store.dispatch("getDbProjects");
     }
-  },
-
-  data() {
-    return {
-      stackToBeAdded: "",
-      modifiedDbProjectsData: {}
-    };
   }
 };
 </script>

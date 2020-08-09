@@ -1,28 +1,40 @@
 <template>
   <div id="projects">
     <h1>Projects</h1>
-    <div v-for="project in githubData" :key="project.id">
-      <strong>{{ project.name }}</strong>
-      <p>{{project.description}}</p>
-      <p>{{project.language}}</p>
-      <template v-if="dbProjectsData[project.id] && dbProjectsData[project.id]['stacks']">
-        <span v-for="(stack, index) in dbProjectsData[project.id]['stacks']" :key="index">{{stack}}</span>
-      </template>
 
-      <a :href="project.html_url" target="_blank" rel="noopener noreferrer">Code</a>
-      <a :href="project.homepage" target="_blank" rel="noopener noreferrer">Live</a>
-    </div>
+    <template v-for="project in filteredGithubData">
+      <div
+        v-if="!dbProjectsData[project.id] || !dbProjectsData[project.id]['hide']"
+        :key="project.id"
+      >
+        <strong>{{ project.name }}</strong>
+        <p>{{project.description}}</p>
+        <p>{{project.language}}</p>
+        <template v-if="dbProjectsData[project.id] && dbProjectsData[project.id]['stacks']">
+          <span
+            v-for="(stack, index) in dbProjectsData[project.id]['stacks']"
+            :key="index"
+          >{{stack}}</span>
+        </template>
+
+        <a :href="project.html_url" target="_blank" rel="noopener noreferrer">Code</a>
+        <a :href="project.homepage" target="_blank" rel="noopener noreferrer">Live</a>
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
+import { mapGetters, mapState } from "vuex";
+
 export default {
   name: "Projects",
-  props: ["githubData", "dbProjectsData"],
   components: {},
-  created() {
-    console.log(this.dbProjectsData);
+  computed: {
+    ...mapGetters(["filteredGithubData"]),
+    ...mapState(["dbProjectsData"])
   },
+
   data() {
     return {
       stackLists: {

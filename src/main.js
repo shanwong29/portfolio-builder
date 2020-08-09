@@ -5,11 +5,14 @@ Vue.config.productionTip = false;
 
 import vuetify from "./plugins/vuetify";
 import router from "./plugins/router";
+import { store } from "./plugins/store";
 
 new Vue({
   el: "#app",
+  store,
   router,
   vuetify,
+
   render: (h) => h(App),
 });
 

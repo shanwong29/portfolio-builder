@@ -31,21 +31,27 @@
 
 <script>
 import { db } from "../firebase/init";
+
 export default {
   data() {
+    const {
+      name,
+      bio,
+      description,
+      interests,
+      docId
+    } = this.$store.state.firestoreBasicInfo;
     return {
       valid: false,
       nameRules: [v => !!v || "Password is required"],
-      name: this.firestoreBasicInfo.name,
-      bio: this.firestoreBasicInfo.bio,
-      description: this.firestoreBasicInfo.description,
-      modifiedInterests: [...this.firestoreBasicInfo.interests],
-      docId: this.firestoreBasicInfo.docId,
+      name,
+      bio,
+      description,
+      modifiedInterests: [...interests],
+      docId,
       interestToBeAdded: ""
     };
   },
-  props: ["firestoreBasicInfo"],
-
   methods: {
     updateAbout() {
       const docRef = db.collection("about").doc(this.docId);

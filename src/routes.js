@@ -3,8 +3,8 @@ import Profile from "./components/Profile";
 import Initial from "./components/Initial";
 
 export const routes = [
-  { path: "/", component: Profile },
-  { path: "/admin", component: Admin },
-  { path: "/Initial", component: Initial },
+  { path: "/", name: "mainPage", component: Profile },
+  { path: "/admin", name: "admin", component: Admin },
+  { path: "/Initial", name: "initial", component: Initial },
   { path: "*", redirect: "/" },
 ];

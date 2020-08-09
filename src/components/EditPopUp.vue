@@ -1,10 +1,8 @@
 <template>
   <div>
     <v-row class="center mt-16">
-      <v-btn color="primary" class="ma-2" dark @click="dialog = true">Open Dialog 1</v-btn>
-
       <v-dialog
-        v-model="dialog"
+        v-model="openEditPopUp"
         fullscreen
         hide-overlay
         transition="dialog-bottom-transition"
@@ -21,18 +19,13 @@
 
             <v-spacer></v-spacer>
 
-            <v-btn icon dark @click="dialog = false">
+            <v-btn icon dark @click="toogleEditPopUp">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-app-bar>
 
           <v-card-text class="mt-16">
-            <component
-              :is="displayEditCmp"
-              :firestoreBasicInfo="firestoreBasicInfo"
-              :dbProjectsData="dbProjectsData"
-              :githubData="githubData"
-            ></component>
+            <component :is="displayEditCmp"></component>
           </v-card-text>
 
           <div style="flex: 1 1 auto;"></div>
@@ -40,22 +33,6 @@
       </v-dialog>
     </v-row>
   </div>
-
-  <!-- 
-
-  <v-card class="ma-auto pop-up">
-    <nav>
-      <button @click="setDisplayEditCmp('EditAbout')">About</button>
-      <button @click="setDisplayEditCmp('EditProjects')">Projects</button>
-      <button @click="setDisplayEditCmp('EditContact')">Contact</button>
-    </nav>
-    <component
-      :is="displayEditCmp"
-      :firestoreBasicInfo="firestoreBasicInfo"
-      :dbProjectsData="dbProjectsData"
-      :githubData="githubData"
-    ></component>
-  </v-card>-->
 </template>
 
 
@@ -63,20 +40,26 @@
 import EditAbout from "./EditAbout";
 import EditContact from "./EditContact";
 import EditProjects from "./EditProjects";
+import { mapState } from "vuex";
 
 export default {
   components: { EditAbout, EditContact, EditProjects },
-  props: ["firestoreBasicInfo", "dbProjectsData", "githubData"],
+  props: ["firestoreBasicInfo", "dbProjectsData"],
   data() {
     return {
-      dialog: false,
       tab: null,
       displayEditCmp: "EditAbout"
     };
   },
+  computed: {
+    ...mapState(["openEditPopUp"])
+  },
   methods: {
     setDisplayEditCmp(targetCmp) {
       return (this.displayEditCmp = targetCmp);
+    },
+    toogleEditPopUp() {
+      this.$store.commit({ type: "toogleEditPopUp" });
     }
   }
 };
