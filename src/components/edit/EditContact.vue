@@ -1,14 +1,25 @@
 <template>
   <v-form ref="form" v-model="valid">
-    <v-text-field v-model="linkedin" :rules="urlRules" label="Linkedin" required></v-text-field>
-    <v-text-field v-model="email" :rules="emailRules" label="email"></v-text-field>
+    <v-text-field
+      v-model="linkedin"
+      :rules="urlRules"
+      label="Linkedin"
+      required
+    ></v-text-field>
+    <v-text-field
+      v-model="email"
+      :rules="emailRules"
+      label="email"
+    ></v-text-field>
 
-    <v-btn color="primary" class="ma-2" dark @click="updateContact">Save Changes</v-btn>
+    <v-btn color="primary" class="ma-2" dark @click="updateContact"
+      >Save Changes</v-btn
+    >
   </v-form>
 </template>
 
 <script>
-import { db } from "../firebase/init";
+import { db } from "../../firebase/init";
 
 export default {
   data() {
@@ -19,10 +30,10 @@ export default {
       linkedin: linkedin || "",
       valid: false,
       emailRules: [
-        v => !!v || "E-mail is required",
-        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       ],
-      urlRules: [v => !!v || "Url is required"]
+      urlRules: [(v) => !!v || "Url is required"],
     };
   },
 
@@ -33,7 +44,7 @@ export default {
         await docRef.set(
           {
             linkedin: this.linkedin,
-            email: this.email
+            email: this.email,
           },
           { merge: true }
         );
@@ -42,11 +53,9 @@ export default {
       } catch (err) {
         console.error();
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-
-<style>
-</style>
+<style></style>

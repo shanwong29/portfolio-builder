@@ -10,28 +10,17 @@
 </template>
 
 <script>
-import About from "./About";
-import Projects from "./Projects";
-import Contact from "./Contact";
-
-import EditPopUp from "./EditPopUp";
+import About from "./display/About";
+import Projects from "./display/Projects";
+import Contact from "./display/Contact";
+import EditPopUp from "./edit/EditPopUp";
 import { mapState } from "vuex";
 
 export default {
-  //is an object
   components: { About, Projects, Contact, EditPopUp },
-  data() {
-    return {
-      // firestoreBasicInfo: {},
-      // dbProjectsData: {}
-    };
-  },
-
   computed: {
-    ...mapState(["isAdmin"])
-  }
-
-  // async created() {}
+    ...mapState(["isAdmin"]),
+  },
 };
 </script>
 

@@ -33,7 +33,6 @@ export const store = new Vuex.Store({
       state.githubData = payload.data;
     },
     setIsAdmin: (state, payload) => {
-      console.log("???");
       state.isAdmin = payload.isAdmin;
     },
     toogleEditPopUp: (state) => {
@@ -44,7 +43,6 @@ export const store = new Vuex.Store({
     },
     setFirestoreBasicInfo: (state, payload) => {
       state.firestoreBasicInfo = payload.data;
-      console.log(state.firestoreBasicInfo);
     },
   },
 

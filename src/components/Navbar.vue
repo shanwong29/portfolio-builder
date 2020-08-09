@@ -16,7 +16,9 @@
     </div>
     <v-spacer></v-spacer>
     <div v-if="isAdmin">
-      <v-btn color="primary" class="ma-2" dark @click="toogleEditPopUp">Edit</v-btn>
+      <v-btn color="primary" class="ma-2" dark @click="toogleEditPopUp"
+        >Edit</v-btn
+      >
 
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
@@ -43,19 +45,15 @@ export default {
     },
     toogleEditPopUp() {
       this.$store.commit({ type: "toogleEditPopUp" });
-    }
-  },
-  created() {
-    console.log(this.$store.state.isAdmin);
+    },
   },
   computed: {
     ...mapState(["isAdmin"]),
     isMainPage() {
       return this.$route.name === "mainPage";
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
