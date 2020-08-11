@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="pt-16">
     <h2>Welcome to use this Portfolio Starter.</h2>
     <p>
       By submitting this initial form, you email will be set as an Admin user in

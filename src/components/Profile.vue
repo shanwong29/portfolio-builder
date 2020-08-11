@@ -1,10 +1,12 @@
 <template>
-  <div class="profile">
+  <div>
     <EditPopUp v-if="isAdmin" />
     <About />
-    <hr />
+    <v-divider></v-divider>
+
     <Projects />
-    <hr />
+    <v-divider></v-divider>
+
     <Contact />
   </div>
 </template>
@@ -19,13 +21,10 @@ import { mapState } from "vuex";
 export default {
   components: { About, Projects, Contact, EditPopUp },
   computed: {
-    ...mapState(["isAdmin"]),
-  },
+    ...mapState(["isAdmin"])
+  }
 };
 </script>
 
 <style>
-.profile {
-  scroll-behavior: smooth;
-}
 </style>

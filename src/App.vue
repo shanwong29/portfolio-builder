@@ -44,7 +44,11 @@ export default {
 <style>
 @media (min-width: 600px) {
   .content {
-    width: 70%;
+    width: 75%;
   }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar fixed min-width="100%">
+  <v-app-bar hide-on-scroll fixed min-width="100%">
     <v-btn class="mx-1" to="/" text small color="primary" v-if="!isMainPage">
       <v-icon :size="16" class="mr-1">mdi-home</v-icon>Home
     </v-btn>
@@ -16,9 +16,7 @@
     </div>
     <v-spacer></v-spacer>
     <div v-if="isAdmin">
-      <v-btn color="primary" class="ma-2" dark @click="toogleEditPopUp"
-        >Edit</v-btn
-      >
+      <v-btn color="primary" class="ma-2" dark @click="toogleEditPopUp">Edit</v-btn>
 
       <v-tooltip bottom>
         <template v-slot:activator="{ on, attrs }">
@@ -45,14 +43,14 @@ export default {
     },
     toogleEditPopUp() {
       this.$store.commit({ type: "toogleEditPopUp" });
-    },
+    }
   },
   computed: {
     ...mapState(["isAdmin"]),
     isMainPage() {
       return this.$route.name === "mainPage";
-    },
-  },
+    }
+  }
 };
 </script>
 
