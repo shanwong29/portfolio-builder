@@ -82,9 +82,10 @@ export default {
 
   async created() {
     try {
-      const querySnapshot = await db.collection("users").get();
-      if (querySnapshot.docs.length) {
-        // this.$router.push("/");
+      const docRef = db.collection("personalInfo").doc("about");
+      const doc = await docRef.get();
+      if (doc.exists) {
+        this.$router.push({ name: "mainPage" });
       }
     } catch (err) {
       console.log(err);
@@ -100,31 +101,31 @@ export default {
       if (this.valid) {
         try {
           // Add user
-          const cred = await auth.createUserWithEmailAndPassword(
-            this.email,
-            this.password
-          );
+          await auth.createUserWithEmailAndPassword(this.email, this.password);
           // here the user is already signuped & logined, and firebase assign a uuid to this user
 
-          // create user collection
-          await db
-            .collection("users")
-            .doc(cred.user.uid)
-            .set({
-              fullName: this.userFullName
-            });
-
-          // set this user as admin
+          // get our deployed fn from firebase
           const addAdminRole = functions.httpsCallable(
             "addAdminRole" /* need to be same as the name of fn */
           );
+
           //  const AddAdminRole return a function
-          const result = await addAdminRole({ email: this.email });
-          alert(
-            `${result.data.message} \nApp has been initialized. \nRemember to change the firebase security setting.`
-          );
-          // redirect user to main page
-          this.$router.push("/");
+          //  use this fn to set this user as admin and create "about" doc
+          const { data } = await addAdminRole({
+            name: this.userFullName,
+            email: this.email
+          });
+
+          if (data.error) {
+            alert(`${data.error}`);
+          } else {
+            await auth.signOut();
+            alert(
+              `${data.message} \nApp has been initialized. \nRemember to change the firebase security setting.`
+            );
+          }
+
+          this.$router.push({ name: "admin" });
         } catch (err) {
           console.log(err);
           this.$refs.form.resetValidation();
