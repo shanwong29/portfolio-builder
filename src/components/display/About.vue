@@ -1,5 +1,5 @@
 <template>
-  <div id="about" class="py-16">
+  <div id="about" class="mt-8 py-16">
     <img class="profile-pic" :src="profilePicUrl" :alt="firestoreBasicInfo.name" />
     <div>
       <h1>Hi, I am {{ firestoreBasicInfo.name }}</h1>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row class="center mt-16">
+    <v-row class="center">
       <v-dialog
         v-model="openEditPopUp"
         fullscreen

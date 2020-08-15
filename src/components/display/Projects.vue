@@ -11,10 +11,7 @@
           :key="project.id"
         >
           <v-card class="mx-auto my-4" max-width="300">
-            <v-img
-              height="200"
-              :src="dbProjectsData[project.id] && dbProjectsData[project.id]['imgUrl']? dbProjectsData[project.id]['imgUrl'] : `https://cdn.vuetifyjs.com/images/parallax/material.jpg`"
-            >
+            <v-img height="200" :src="getCoverUrl(project.id)">
               <v-expand-transition>
                 <div
                   v-if="hover"
@@ -78,6 +75,17 @@ export default {
   computed: {
     ...mapGetters(["filteredGithubData"]),
     ...mapState(["dbProjectsData"])
+  },
+  methods: {
+    getCoverUrl(projectId) {
+      if (
+        this.dbProjectsData[projectId] &&
+        this.dbProjectsData[projectId]["coverUrl"]
+      ) {
+        return this.dbProjectsData[projectId]["coverUrl"];
+      }
+      return `https://cdn.vuetifyjs.com/images/parallax/material.jpg`;
+    }
   },
 
   data() {

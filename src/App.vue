@@ -11,6 +11,7 @@
 import Navbar from "./components/Navbar";
 import axios from "axios";
 import { auth } from "./firebase/init";
+
 export default {
   components: { Navbar },
   name: "App",
@@ -21,23 +22,26 @@ export default {
     );
 
     this.$store.commit({ type: "setGithubData", data });
-
-    //check if this user is a admin when page is loaded and everytime when there is auth changes
-    await auth.onAuthStateChanged(async user => {
-      if (user) {
-        console.log("login user:", user);
-        const idTokenResult = await user.getIdTokenResult();
-        if (idTokenResult.claims.admin) {
-          this.$store.commit({ type: "setIsAdmin", isAdmin: true });
+    try {
+      //check if this user is a admin when page is loaded and everytime when there is auth changes
+      await auth.onAuthStateChanged(async user => {
+        if (user) {
+          console.log("login user:", user);
+          const idTokenResult = await user.getIdTokenResult();
+          if (idTokenResult.claims.admin) {
+            this.$store.commit({ type: "setIsAdmin", isAdmin: true });
+          }
+        } else {
+          this.$store.commit({ type: "setIsAdmin", isAdmin: false });
         }
-      } else {
-        this.$store.commit({ type: "setIsAdmin", isAdmin: false });
-      }
-    });
-
+      });
+    } catch (err) {
+      console.log(err);
+    }
     // get data from firestore
     this.$store.dispatch("getDbBasicInfo");
     this.$store.dispatch("getDbProjects");
+    this.$store.dispatch("getDbContact");
   }
 };
 </script>
