@@ -9,6 +9,8 @@ export const store = new Vuex.Store({
     githubData: [], //unlike react, all states need to be initialized here before used
     firestoreBasicInfo: {},
     dbProjectsData: {},
+    dbContactData: {},
+
     isAdmin: false,
     openEditPopUp: false,
   },
@@ -22,9 +24,7 @@ export const store = new Vuex.Store({
         : "";
     },
     linkedinUrl: (state) => {
-      return (
-        state.firestoreBasicInfo.linkedin && state.firestoreBasicInfo.linkedin
-      );
+      return state.dbContactData?.linkedin;
     },
   },
 
@@ -44,30 +44,48 @@ export const store = new Vuex.Store({
     setFirestoreBasicInfo: (state, payload) => {
       state.firestoreBasicInfo = payload.data;
     },
+    setContactData: (state, payload) => {
+      state.dbContactData = payload.data;
+    },
   },
 
   actions: {
     async getDbProjects(context) {
-      const projectsData = [];
-      const projectsSnapshot = await db.collection("projects").get();
-      projectsSnapshot.forEach((doc) => {
-        projectsData[doc.id] = doc.data();
-      });
+      const projectsData = {};
+      await db.collection("projects").onSnapshot((snapshot) => {
+        snapshot.forEach((doc) => {
+          console.log(doc.data());
+          projectsData[doc.id] = doc.data();
+        });
 
-      context.commit({
-        type: "setDbProjectsData",
-        data: { ...projectsData },
+        context.commit({
+          type: "setDbProjectsData",
+          data: { ...projectsData },
+        });
       });
     },
 
     async getDbBasicInfo(context) {
-      const snapshot = await db.collection("about").get();
-      snapshot.forEach((doc) => {
-        context.commit({
-          type: "setFirestoreBasicInfo",
-          data: { ...doc.data(), docId: doc.id },
+      await db
+        .collection("personalInfo")
+        .doc("about")
+        .onSnapshot((doc) => {
+          context.commit({
+            type: "setFirestoreBasicInfo",
+            data: { ...doc.data() },
+          });
         });
-      });
+    },
+    async getDbContact(context) {
+      await db
+        .collection("personalInfo")
+        .doc("contact")
+        .onSnapshot((doc) => {
+          context.commit({
+            type: "setContactData",
+            data: { ...doc.data() },
+          });
+        });
     },
   },
 });

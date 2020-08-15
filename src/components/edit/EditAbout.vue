@@ -1,11 +1,6 @@
 <template>
   <v-form ref="form" v-model="valid">
-    <v-text-field
-      v-model="name"
-      :rules="nameRules"
-      label="Display Name"
-      required
-    ></v-text-field>
+    <v-text-field v-model="name" :rules="nameRules" label="Display Name" required></v-text-field>
 
     <v-text-field v-model="bio" label="One-line Bio"></v-text-field>
 
@@ -13,6 +8,7 @@
       name="input-7-1"
       label="Self introduction"
       :value="description"
+      @input="modifyDescription"
     ></v-textarea>
 
     <label for="text" id="interests">Interest</label>
@@ -28,18 +24,13 @@
     </div>
 
     <div class="input-wrapper">
-      <v-text-field
-        v-model="interestToBeAdded"
-        label="Add Interest"
-      ></v-text-field>
+      <v-text-field v-model="interestToBeAdded" label="Add Interest"></v-text-field>
 
       <v-btn icon color="success" @click="addInterest" class="mx-2">
         <v-icon>mdi-plus-circle-outline</v-icon>
       </v-btn>
     </div>
-    <v-btn color="primary" class="ma-2" dark @click="updateAbout"
-      >Save Changes</v-btn
-    >
+    <v-btn color="primary" class="ma-2" dark @click="updateAbout">Save Changes</v-btn>
   </v-form>
 </template>
 
@@ -52,23 +43,24 @@ export default {
       name,
       bio,
       description,
-      interests,
-      docId,
+      interests
     } = this.$store.state.firestoreBasicInfo;
     return {
       valid: false,
-      nameRules: [(v) => !!v || "Password is required"],
-      name,
-      bio,
-      description,
+      nameRules: [v => !!v || "Display name is required"],
+      name: name,
+      bio: bio || "",
+      description: description || "",
       modifiedInterests: [...interests],
-      docId,
-      interestToBeAdded: "",
+      interestToBeAdded: ""
     };
   },
   methods: {
+    modifyDescription(input) {
+      this.description = input;
+    },
     updateAbout() {
-      const docRef = db.collection("about").doc(this.docId);
+      const docRef = db.collection("personalInfo").doc("about");
 
       return docRef
         .set(
@@ -76,7 +68,7 @@ export default {
             name: this.name,
             bio: this.bio,
             description: this.description,
-            interests: this.modifiedInterests,
+            interests: this.modifiedInterests
           },
           { merge: true }
         )
@@ -107,8 +99,8 @@ export default {
     addInterest() {
       this.modifiedInterests.push(this.interestToBeAdded);
       this.interestToBeAdded = "";
-    },
-  },
+    }
+  }
 };
 </script>
 
