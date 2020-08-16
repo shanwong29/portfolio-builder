@@ -38,11 +38,15 @@
                 }}
               </v-btn>
 
-              <v-subheader class="my-4 mx-0">Tech stacks</v-subheader>
+              <h4 class="my-4 mx-0">Tech stacks</h4>
               <template v-if="dbProjectsData[project.id]">
                 <v-chip
                   v-for="(stack, index) in dbProjectsData[project.id]['stacks']"
                   :key="index"
+                  class="mr-1 mb-1"
+                  close-icon="mdi-delete"
+                  close
+                  @click:close="deleteTechStack(project.id, stack)"
                 >{{ stack }}</v-chip>
               </template>
               <div class="input-wrapper">
@@ -69,6 +73,7 @@
 import { db, storage } from "../../firebase/init";
 import { mapGetters, mapState } from "vuex";
 import LongLoadingBtn from "../LongLoadingBtn";
+import * as firebase from "firebase/app";
 
 export default {
   name: "Projects",
@@ -227,6 +232,12 @@ export default {
       // this.$refs.fileupload.value = null;
       // this.$ref.fileupload.reset();
       //todo: seems no way to reset the display input text
+    },
+    async deleteTechStack(projectId, deleteItem) {
+      const docRef = db.collection("projects").doc(projectId.toString());
+      await docRef.update({
+        stacks: firebase.firestore.FieldValue.arrayRemove(deleteItem)
+      });
     }
   }
 };
