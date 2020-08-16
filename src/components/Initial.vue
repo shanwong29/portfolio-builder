@@ -44,7 +44,13 @@
             @click:append="showReenteredPassword = !showReenteredPassword"
           ></v-text-field>
         </div>
-        <v-btn color="primary" class="mt-auto" @click="signup">Initial App</v-btn>
+        <long-loading-btn
+          color="primary"
+          class="mt-auto"
+          @click="signup"
+          :loading="isLoading"
+          label="Initial App"
+        ></long-loading-btn>
       </v-form>
     </v-card>
   </v-container>
@@ -52,11 +58,15 @@
 
 <script>
 import { auth, db, functions } from "../firebase/init";
+import LongLoadingBtn from "./LongLoadingBtn";
+
 export default {
+  components: { LongLoadingBtn },
   data() {
     return {
       valid: false,
       email: "",
+      isLoading: false,
       password: "",
       reenteredPassword: "",
       userFullName: "",
@@ -85,7 +95,7 @@ export default {
       const docRef = db.collection("personalInfo").doc("about");
       const doc = await docRef.get();
       if (doc.exists) {
-        this.$router.push({ name: "mainPage" });
+        // this.$router.push({ name: "mainPage" });
       }
     } catch (err) {
       console.log(err);
@@ -97,8 +107,9 @@ export default {
     },
 
     async signup() {
-      this.$refs.form.validate();
+      await this.$refs.form.validate();
       if (this.valid) {
+        this.isLoading = true;
         try {
           // Add user
           await auth.createUserWithEmailAndPassword(this.email, this.password);
@@ -117,13 +128,17 @@ export default {
           });
 
           if (data.error) {
-            alert(`${data.error}`);
+            this.isLoading = false;
           } else {
             await auth.signOut();
+            // todo: the isloading is set after alert is clicked.
+            this.isLoading = false;
             alert(
               `${data.message} \nApp has been initialized. \nRemember to change the firebase security setting.`
             );
           }
+
+          alert(`${data.error}`);
 
           this.$router.push({ name: "admin" });
         } catch (err) {

@@ -16,19 +16,29 @@
             @click:append="showPassword = !showPassword"
           ></v-text-field>
         </div>
-        <v-btn color="primary" class="mt-auto" @click="login">Login</v-btn>
+
+        <long-loading-btn
+          color="primary"
+          class="mt-auto"
+          @click="login"
+          :loading="isLoading"
+          label="Login"
+        ></long-loading-btn>
       </v-form>
     </v-card>
   </v-container>
 </template>
 
 <script>
+import LongLoadingBtn from "./LongLoadingBtn";
 import { auth } from "../firebase/init";
 export default {
+  components: { LongLoadingBtn },
   data() {
     return {
       valid: false,
       showPassword: false,
+      isLoading: false,
       email: "",
       password: "",
       emailRules: [
@@ -40,8 +50,9 @@ export default {
   },
   methods: {
     async login() {
-      this.$refs.form.validate();
+      await this.$refs.form.validate();
       if (this.valid) {
+        this.isLoading = true;
         try {
           const cred = await auth.signInWithEmailAndPassword(
             this.email,
@@ -53,6 +64,7 @@ export default {
           console.log(err);
           this.$refs.form.resetValidation();
         }
+        this.isLoading = false;
       }
     }
   }

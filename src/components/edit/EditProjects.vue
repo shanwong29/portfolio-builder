@@ -22,7 +22,12 @@
                 show-size
                 @change="onFilePicked"
               ></v-file-input>
-              <v-btn @click="uploadProjectCover(project.name, project.id)">Upload</v-btn>
+              <long-loading-btn
+                color="primary"
+                :loading="isUploading"
+                label="Upload"
+                @click="uploadProjectCover(project.name, project.id)"
+              ></long-loading-btn>
             </v-col>
             <v-col>
               <v-btn small @click="toggleShowProject(project.name, project.id)">
@@ -63,8 +68,11 @@
 <script>
 import { db, storage } from "../../firebase/init";
 import { mapGetters, mapState } from "vuex";
+import LongLoadingBtn from "../LongLoadingBtn";
+
 export default {
   name: "Projects",
+  components: { LongLoadingBtn },
   data() {
     return {
       stackToBeAdded: "",
@@ -74,9 +82,11 @@ export default {
           value.size < 5000000 ||
           "Photo size should be less than 5 MB!"
       ],
+      isUploading: false,
       imageName: "",
       imageUrl: "",
-      imageFile: ""
+      imageFile: "",
+      imageType: ""
     };
   },
   computed: {
@@ -148,46 +158,57 @@ export default {
       }
     },
     async uploadProjectCover(projectName, projectId) {
+      if (!this.imageFile) {
+        console.log("no file");
+        return;
+      }
       // Create a root reference
       const storageRef = storage.ref();
       const coversRef = storageRef.child(`covers/${this.imageName}`);
       var metadata = {
-        contentType: "image/jpeg"
+        contentType: this.imageType
       };
-      await coversRef.put(this.imageFile, metadata);
 
-      const coverUrl = await coversRef.getDownloadURL();
+      try {
+        this.isUploading = true;
+        await coversRef.put(this.imageFile, metadata);
 
-      const docRef = db.collection("projects").doc(projectId.toString());
-      if (!this.dbProjectsData[projectId]) {
-        await docRef.set(
-          {
-            name: projectName,
-            coverUrl
-          },
-          { merge: true }
-        );
-      } else {
-        await docRef.set(
-          {
-            coverUrl
-          },
-          { merge: true }
-        );
+        const coverUrl = await coversRef.getDownloadURL();
+
+        const docRef = db.collection("projects").doc(projectId.toString());
+        if (!this.dbProjectsData[projectId]) {
+          await docRef.set(
+            {
+              name: projectName,
+              coverUrl
+            },
+            { merge: true }
+          );
+        } else {
+          await docRef.set(
+            {
+              coverUrl
+            },
+            { merge: true }
+          );
+        }
+      } catch (err) {
+        console.error();
       }
-
-      this.imageName = "";
-      this.imageFile = "";
-      this.imageUrl = "";
+      this.isUploading = false;
+      this.resetFileInput();
     },
 
     onFilePicked(e) {
       const selectedFile = e;
       if (selectedFile !== undefined) {
         this.imageName = selectedFile.name;
+        this.imageType = selectedFile.type;
+
         if (this.imageName.lastIndexOf(".") <= 0) {
           return;
         }
+
         const fr = new FileReader();
         fr.readAsDataURL(selectedFile);
         fr.addEventListener("load", () => {
@@ -195,10 +216,17 @@ export default {
           this.imageFile = selectedFile; // this is an image file that can be sent to server...
         });
       } else {
-        this.imageName = "";
-        this.imageFile = "";
-        this.imageUrl = "";
+        this.resetFileInput();
       }
+    },
+    resetFileInput() {
+      this.imageName = "";
+      this.imageFile = "";
+      this.imageUrl = "";
+      this.imageType = "";
+      // this.$refs.fileupload.value = null;
+      // this.$ref.fileupload.reset();
+      //todo: seems no way to reset the display input text
     }
   }
 };
