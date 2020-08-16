@@ -54,7 +54,6 @@ export const store = new Vuex.Store({
       const projectsData = {};
       await db.collection("projects").onSnapshot((snapshot) => {
         snapshot.forEach((doc) => {
-          console.log(doc.data());
           projectsData[doc.id] = doc.data();
         });
 

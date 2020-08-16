@@ -1,37 +1,45 @@
 <template>
-  <v-form ref="form" v-model="valid">
-    <v-text-field v-model="name" :rules="nameRules" label="Display Name" required></v-text-field>
+  <div>
+    <v-form ref="form" v-model="valid">
+      <v-text-field v-model="name" :rules="nameRules" label="Display Name" required></v-text-field>
 
-    <v-text-field v-model="bio" label="One-line Bio"></v-text-field>
+      <v-text-field v-model="bio" label="One-line Bio"></v-text-field>
 
-    <v-textarea
-      name="input-7-1"
-      label="Self introduction"
-      :value="description"
-      @input="modifyDescription"
-    ></v-textarea>
+      <v-textarea
+        name="input-7-1"
+        label="Self introduction"
+        :value="description"
+        @input="modifyDescription"
+      ></v-textarea>
 
-    <label for="text" id="interests">Interest</label>
-    <div v-for="(modifiedInterest, index) in modifiedInterests" :key="index">
-      <input type="text" :value="modifiedInterest" />
+      <label for="text" id="interests">Interest</label>
+      <div v-for="(modifiedInterest, index) in modifiedInterests" :key="index">
+        <input type="text" :value="modifiedInterest" />
 
-      <button @click.prevent="moveInterestUp(index)">up</button>
-      <button @click.prevent="moveInterestDown(index)">down</button>
+        <button @click.prevent="moveInterestUp(index)">up</button>
+        <button @click.prevent="moveInterestDown(index)">down</button>
 
-      <v-btn icon color="error" @click="deleteInterest" class="mx-2">
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-    </div>
+        <v-btn icon color="error" @click="deleteInterest" class="mx-2">
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </div>
 
-    <div class="input-wrapper">
-      <v-text-field v-model="interestToBeAdded" label="Add Interest"></v-text-field>
+      <div class="input-wrapper">
+        <v-text-field v-model="interestToBeAdded" label="Add Interest"></v-text-field>
 
-      <v-btn icon color="success" @click="addInterest" class="mx-2">
-        <v-icon>mdi-plus-circle-outline</v-icon>
-      </v-btn>
-    </div>
-    <v-btn color="primary" class="ma-2" dark @click="updateAbout">Save Changes</v-btn>
-  </v-form>
+        <v-btn icon color="success" @click="addInterest" class="mx-2">
+          <v-icon>mdi-plus-circle-outline</v-icon>
+        </v-btn>
+      </div>
+      <v-btn color="primary" class="ma-2" @click="updateAbout">Save Changes</v-btn>
+    </v-form>
+    <v-snackbar v-model="snackbar" multi-line :timeout="2000">
+      Successfully updated About.
+      <template v-slot:action="{ attrs }">
+        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">Close</v-btn>
+      </template>
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
@@ -48,6 +56,7 @@ export default {
     return {
       valid: false,
       nameRules: [v => !!v || "Display name is required"],
+      snackbar: false,
       name: name,
       bio: bio || "",
       description: description || "",
@@ -55,26 +64,26 @@ export default {
       interestToBeAdded: ""
     };
   },
+
   methods: {
     modifyDescription(input) {
       this.description = input;
     },
-    updateAbout() {
-      const docRef = db.collection("personalInfo").doc("about");
+    async updateAbout() {
+      await this.$refs.form.validate();
+      if (this.valid) {
+        const docRef = db.collection("personalInfo").doc("about");
 
-      return docRef
-        .set(
-          {
-            name: this.name,
-            bio: this.bio,
-            description: this.description,
-            interests: this.modifiedInterests
-          },
-          { merge: true }
-        )
-        .then(() => {
-          console.log("successfully updated");
+        await docRef.set({
+          name: this.name,
+          bio: this.bio,
+          description: this.description,
+          interests: this.modifiedInterests
         });
+
+        this.snackbar = true;
+        console.log("Successfully updated About");
+      }
     },
 
     moveInterestUp(index) {
@@ -97,6 +106,9 @@ export default {
       this.modifiedInterests.splice(index, 1);
     },
     addInterest() {
+      if (!this.interestToBeAdded) {
+        return;
+      }
       this.modifiedInterests.push(this.interestToBeAdded);
       this.interestToBeAdded = "";
     }
