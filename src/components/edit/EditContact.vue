@@ -3,8 +3,9 @@
     <v-form ref="form" v-model="valid">
       <v-text-field v-model="linkedin" :rules="urlRules" label="Linkedin" required></v-text-field>
       <v-text-field v-model="email" :rules="emailRules" label="email"></v-text-field>
-
-      <v-btn color="primary" class="ma-2" dark @click="updateContact">Save Changes</v-btn>
+      <div class="d-flex justify-end">
+        <v-btn color="primary" class="ma-2" dark @click="updateContact">Save Changes</v-btn>
+      </div>
     </v-form>
 
     <v-snackbar v-model="snackbar" multi-line :timeout="2000">
@@ -21,9 +22,8 @@ import { db } from "../../firebase/init";
 
 export default {
   data() {
-    const { docId, linkedin, email } = this.$store.state.firestoreBasicInfo;
+    const { linkedin, email } = this.$store.state.dbContactData;
     return {
-      docId,
       email: email || "",
       linkedin: linkedin || "",
       valid: false,
@@ -47,7 +47,6 @@ export default {
             email: this.email
           });
           this.snackbar = true;
-          console.log("successfully updated Contact");
         } catch (err) {
           console.error();
         }

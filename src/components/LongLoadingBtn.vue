@@ -1,5 +1,10 @@
 <template>
-  <v-btn color="primary" @click="emitOnClickEvent" :disabled="loading" :loading="loading">
+  <v-btn
+    color="primary"
+    @click="emitOnClickEvent"
+    :disabled="loading || disabled"
+    :loading="loading"
+  >
     {{label}}
     <template v-slot:loader>
       <span class="custom-loader">
@@ -19,7 +24,8 @@ export default {
   props: {
     color: String,
     label: String,
-    loading: Boolean
+    loading: Boolean,
+    disabled: Boolean
   },
 
   watch: {

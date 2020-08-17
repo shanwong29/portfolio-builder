@@ -1,72 +1,99 @@
 <template>
-  <v-expansion-panels focusable>
-    <v-expansion-panel v-for="project in filteredGithubData" :key="project.id">
-      <v-expansion-panel-header>{{ project.name }}</v-expansion-panel-header>
+  <div>
+    <v-expansion-panels v-model="panel" focusable>
+      <v-expansion-panel v-for="project in filteredGithubData" :key="project.id">
+        <v-expansion-panel-header>{{ project.name }}</v-expansion-panel-header>
 
-      <v-expansion-panel-content>
-        <div class="my-2">
-          <v-row>
-            <v-col>
-              <v-card>
-                <v-img :src="getCoverUrl(project.id)" aspect-ratio="1.7"></v-img>
-                <v-overlay :absolute="true" :value="imageUrl">
-                  <v-chip color="primary" label medium>Preview</v-chip>
-                </v-overlay>
-              </v-card>
-              <v-file-input
-                :rules="rules"
-                accept="image/png, image/jpeg, image/gif"
-                placeholder="Pick a project cover"
-                prepend-icon="mdi-camera"
-                label="Project Cover"
-                show-size
-                @change="onFilePicked"
-              ></v-file-input>
-              <long-loading-btn
-                color="primary"
-                :loading="isUploading"
-                label="Upload"
-                @click="uploadProjectCover(project.name, project.id)"
-              ></long-loading-btn>
-            </v-col>
-            <v-col>
-              <v-btn small @click="toggleShowProject(project.name, project.id)">
-                {{
-                dbProjectsData[project.id] && dbProjectsData[project.id]["hide"]
-                ? `show`
-                : `hide`
-                }}
-              </v-btn>
-
-              <h4 class="my-4 mx-0">Tech stacks</h4>
-              <template v-if="dbProjectsData[project.id]">
-                <v-chip
-                  v-for="(stack, index) in dbProjectsData[project.id]['stacks']"
-                  :key="index"
-                  class="mr-1 mb-1"
-                  close-icon="mdi-delete"
-                  close
-                  @click:close="deleteTechStack(project.id, stack)"
-                >{{ stack }}</v-chip>
-              </template>
-              <div class="input-wrapper">
-                <v-text-field v-model="stackToBeAdded" label="Add Stack"></v-text-field>
-
-                <v-btn
-                  color="success"
-                  outlined
-                  @click="addStack(project.name, project.id)"
-                  class="mx-2"
-                >
-                  <v-icon class="mr-2">mdi-plus-circle-outline</v-icon>Add
+        <v-expansion-panel-content>
+          <div class="my-2">
+            <v-row>
+              <v-col :md="5" :xs="12">
+                <v-card>
+                  <v-img :src="getCoverUrl(project.id)" aspect-ratio="1.7"></v-img>
+                  <v-overlay :absolute="true" :value="imageUrl">
+                    <v-chip color="primary" label medium>Preview</v-chip>
+                  </v-overlay>
+                </v-card>
+                <div class="d-flex mt-2">
+                  <v-file-input
+                    :rules="rules"
+                    accept="image/png, image/jpeg, image/gif"
+                    placeholder="Pick a project cover"
+                    prepend-icon="mdi-camera"
+                    label="Project Cover"
+                    show-size
+                    @change="onFilePicked"
+                  ></v-file-input>
+                  <long-loading-btn
+                    color="primary"
+                    class="mt-2 ml-2"
+                    :loading="isUploading"
+                    :disabled="!imageFile"
+                    label="Upload"
+                    @click="uploadProjectCover(project.name, project.id)"
+                  ></long-loading-btn>
+                </div>
+              </v-col>
+              <v-col>
+                <v-btn @click="toggleShowProject(project.name, project.id)">
+                  <v-icon left>{{ fieldExist(project.id, 'hide') ?'mdi-eye':'mdi-eye-off'}}</v-icon>
+                  {{
+                  fieldExist(project.id, 'hide')
+                  ? `Show this project`
+                  : `Hide this project`
+                  }}
                 </v-btn>
-              </div>
-            </v-col>
-          </v-row>
-        </div>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
-  </v-expansion-panels>
+
+                <h4 class="my-4 mx-0">Tech stacks</h4>
+                <template v-if="dbProjectsData[project.id]">
+                  <v-chip
+                    v-for="(stack, index) in dbProjectsData[project.id]['stacks']"
+                    :key="index"
+                    class="mr-1 mb-1"
+                    close-icon="mdi-delete"
+                    close
+                    @click:close="deleteTechStack(project.id, stack)"
+                  >{{ stack }}</v-chip>
+                </template>
+                <div class="d-flex align-center mt-2">
+                  <v-text-field
+                    v-model="stackToBeAdded"
+                    label="Add Stack"
+                    v-on:keyup.enter="addStack(project.name, project.id)"
+                  ></v-text-field>
+
+                  <v-btn
+                    color="success"
+                    @click="addStack(project.name, project.id)"
+                    class="mx-2"
+                    large
+                    icon
+                  >
+                    <v-icon>mdi-plus-circle-outline</v-icon>
+                  </v-btn>
+                </div>
+              </v-col>
+            </v-row>
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+    <v-snackbar
+      v-model="snackbar"
+      :color="hasErr? 'error': ''"
+      :text="hasErr"
+      bottom
+      multi-line
+      :timeout="hasErr? -1: 2000"
+    >
+      {{hasErr? 'Something goes wrong!! Cannot update this project.' : 'Photo uploaded successfully'}}
+      <template
+        v-slot:action="{ attrs }"
+      >
+        <v-btn :color="hasErr? 'grey': 'blue'" text v-bind="attrs" @click="snackbar = false">Close</v-btn>
+      </template>
+    </v-snackbar>
+  </div>
 </template>
 
 <script>
@@ -80,6 +107,7 @@ export default {
   components: { LongLoadingBtn },
   data() {
     return {
+      panel: null,
       stackToBeAdded: "",
       rules: [
         value =>
@@ -91,23 +119,41 @@ export default {
       imageName: "",
       imageUrl: "",
       imageFile: "",
-      imageType: ""
+      imageType: "",
+      hasErr: false,
+      snackbar: false
     };
   },
   computed: {
     ...mapGetters(["filteredGithubData"]),
     ...mapState(["dbProjectsData"])
   },
+  watch: {
+    panel() {
+      this.imageName = "";
+      this.imageUrl = "";
+      this.imageFile = "";
+      this.imageType = "";
+      this.stackToBeAdded = "";
+    }
+  },
   methods: {
+    fieldExist(projectId, field) {
+      if (!this.dbProjectsData[projectId]) {
+        return false;
+      } else if (!this.dbProjectsData[projectId][field]) {
+        return false;
+      } else {
+        return this.dbProjectsData[projectId][field];
+      }
+    },
     getCoverUrl(projectId) {
+      const dbCoverUrl = this.fieldExist(projectId, "coverUrl");
       if (this.imageUrl) {
         return this.imageUrl;
       }
-      if (
-        this.dbProjectsData[projectId] &&
-        this.dbProjectsData[projectId]["coverUrl"]
-      ) {
-        return this.dbProjectsData[projectId]["coverUrl"];
+      if (dbCoverUrl) {
+        return dbCoverUrl;
       }
       return `https://cdn.vuetifyjs.com/images/parallax/material.jpg`;
     },
@@ -129,18 +175,17 @@ export default {
           );
         } else {
           await docRef.update({
-            stacks: [
-              ...this.dbProjectsData[projectId]["stacks"],
+            stacks: firebase.firestore.FieldValue.arrayUnion(
               this.stackToBeAdded.trim()
-            ]
+            )
           });
         }
 
         this.stackToBeAdded = "";
-
-        console.log("stacks updated");
       } catch (err) {
         console.log(err);
+        this.snackbar = true;
+        this.hasErr = true;
       }
     },
     async toggleShowProject(projectName, projectId) {
@@ -197,10 +242,14 @@ export default {
             { merge: true }
           );
         }
+
+        this.hasErr = false;
       } catch (err) {
         console.error();
+        this.hasErr = true;
       }
       this.isUploading = false;
+      this.snackbar = true;
       this.resetFileInput();
     },
 
@@ -250,9 +299,5 @@ export default {
 
 .preview {
   position: absolute;
-}
-
-.image-wrapper {
-  position: relative;
 }
 </style>

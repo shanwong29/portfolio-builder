@@ -1,14 +1,14 @@
 <template>
   <div id="about" class="mt-8 py-16">
-    <img class="profile-pic" :src="profilePicUrl" :alt="firestoreBasicInfo.name" />
-    <div>
-      <h1>Hi, I am {{ firestoreBasicInfo.name }}</h1>
-      <p>{{ firestoreBasicInfo.bio }}</p>
-      <p>{{ firestoreBasicInfo.description }}</p>
+    <img class="profile-pic" :src="profilePicUrl" :alt="dbAboutData.name" />
+    <div class="basicInfo">
+      <h1>Hi, I am {{ dbAboutData.name }}</h1>
+      <p>{{ dbAboutData.bio }}</p>
+      <p>{{ dbAboutData.description }}</p>
 
       <h4>Interest</h4>
       <ul>
-        <li v-for="(interest, index) in firestoreBasicInfo.interests" :key="index">{{ interest }}</li>
+        <li v-for="(interest, index) in dbAboutData.interests" :key="index">{{ interest }}</li>
       </ul>
     </div>
   </div>
@@ -21,7 +21,7 @@ export default {
   name: "About",
   computed: {
     ...mapGetters(["profilePicUrl"]),
-    ...mapState(["firestoreBasicInfo"])
+    ...mapState(["dbAboutData"])
   }
 };
 </script>
@@ -38,5 +38,9 @@ export default {
   width: 300px;
   height: 300px;
   border-radius: 50%;
+}
+
+.basicInfo {
+  width: 60%;
 }
 </style>

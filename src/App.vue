@@ -39,7 +39,7 @@ export default {
       console.log(err);
     }
     // get data from firestore
-    this.$store.dispatch("getDbBasicInfo");
+    this.$store.dispatch("getDbAbout");
     this.$store.dispatch("getDbProjects");
     this.$store.dispatch("getDbContact");
   }

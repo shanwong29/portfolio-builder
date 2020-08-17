@@ -7,10 +7,9 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
   state: {
     githubData: [], //unlike react, all states need to be initialized here before used
-    firestoreBasicInfo: {},
+    dbAboutData: {},
     dbProjectsData: {},
     dbContactData: {},
-
     isAdmin: false,
     openEditPopUp: false,
   },
@@ -24,7 +23,7 @@ export const store = new Vuex.Store({
         : "";
     },
     linkedinUrl: (state) => {
-      return state.dbContactData?.linkedin;
+      return state.dbContactData.linkedin;
     },
   },
 
@@ -41,8 +40,8 @@ export const store = new Vuex.Store({
     setDbProjectsData: (state, payload) => {
       state.dbProjectsData = payload.data;
     },
-    setFirestoreBasicInfo: (state, payload) => {
-      state.firestoreBasicInfo = payload.data;
+    setDbAboutData: (state, payload) => {
+      state.dbAboutData = payload.data;
     },
     setContactData: (state, payload) => {
       state.dbContactData = payload.data;
@@ -64,13 +63,13 @@ export const store = new Vuex.Store({
       });
     },
 
-    async getDbBasicInfo(context) {
+    async getDbAbout(context) {
       await db
         .collection("personalInfo")
         .doc("about")
         .onSnapshot((doc) => {
           context.commit({
-            type: "setFirestoreBasicInfo",
+            type: "setDbAboutData",
             data: { ...doc.data() },
           });
         });
@@ -82,7 +81,7 @@ export const store = new Vuex.Store({
         .onSnapshot((doc) => {
           context.commit({
             type: "setContactData",
-            data: { ...doc.data() },
+            data: doc.data(),
           });
         });
     },

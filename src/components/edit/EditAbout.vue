@@ -1,45 +1,57 @@
 <template>
-  <div>
-    <v-form ref="form" v-model="valid">
-      <v-text-field v-model="name" :rules="nameRules" label="Display Name" required></v-text-field>
+  <v-form ref="form" v-model="valid">
+    <v-text-field v-model="name" :rules="nameRules" label="Display Name" required></v-text-field>
 
-      <v-text-field v-model="bio" label="One-line Bio"></v-text-field>
+    <v-text-field v-model="bio" label="One-line Bio"></v-text-field>
 
-      <v-textarea
-        name="input-7-1"
-        label="Self introduction"
-        :value="description"
-        @input="modifyDescription"
-      ></v-textarea>
+    <v-textarea
+      name="input-7-1"
+      label="Self introduction"
+      :value="description"
+      @input="modifyDescription"
+    ></v-textarea>
 
-      <label for="text" id="interests">Interest</label>
-      <div v-for="(modifiedInterest, index) in modifiedInterests" :key="index">
-        <input type="text" :value="modifiedInterest" />
+    <label for="text" id="interests">Interest</label>
+    <div v-for="(modifiedInterest, index) in modifiedInterests" :key="index">
+      <input type="text" :value="modifiedInterest" />
 
-        <button @click.prevent="moveInterestUp(index)">up</button>
-        <button @click.prevent="moveInterestDown(index)">down</button>
+      <button @click.prevent="moveInterestUp(index)">up</button>
+      <button @click.prevent="moveInterestDown(index)">down</button>
 
-        <v-btn icon color="error" @click="deleteInterest" class="mx-2">
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-      </div>
+      <v-btn icon color="error" @click="deleteInterest" class="mx-2">
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+    </div>
 
-      <div class="input-wrapper">
-        <v-text-field v-model="interestToBeAdded" label="Add Interest"></v-text-field>
+    <div class="input-wrapper">
+      <v-text-field v-model="interestToBeAdded" label="Add Interest" v-on:keyup.enter="addInterest"></v-text-field>
 
-        <v-btn icon color="success" @click="addInterest" class="mx-2">
-          <v-icon>mdi-plus-circle-outline</v-icon>
-        </v-btn>
-      </div>
+      <v-btn icon color="success" @click="addInterest" class="mx-2">
+        <v-icon>mdi-plus-circle-outline</v-icon>
+      </v-btn>
+    </div>
+    <div class="d-flex justify-end">
       <v-btn color="primary" class="ma-2" @click="updateAbout">Save Changes</v-btn>
-    </v-form>
-    <v-snackbar v-model="snackbar" multi-line :timeout="2000">
-      Successfully updated About.
+    </div>
+    <v-snackbar
+      v-model="snackbar"
+      :color="hasErr? 'error': ''"
+      :text="hasErr"
+      bottom
+      multi-line
+      :timeout="hasErr? -1: 2000"
+    >
+      {{snackbarMsg}}
       <template v-slot:action="{ attrs }">
-        <v-btn color="blue" text v-bind="attrs" @click="snackbar = false">Close</v-btn>
+        <v-btn
+          :color="hasErr? 'grey': 'blue'"
+          text
+          v-bind="attrs"
+          @click="snackbar = false; hasErr=false"
+        >Close</v-btn>
       </template>
     </v-snackbar>
-  </div>
+  </v-form>
 </template>
 
 <script>
@@ -47,16 +59,13 @@ import { db } from "../../firebase/init";
 
 export default {
   data() {
-    const {
-      name,
-      bio,
-      description,
-      interests
-    } = this.$store.state.firestoreBasicInfo;
+    const { name, bio, description, interests } = this.$store.state.dbAboutData;
     return {
       valid: false,
       nameRules: [v => !!v || "Display name is required"],
       snackbar: false,
+      snackbarMsg: "",
+      hasErr: false,
       name: name,
       bio: bio || "",
       description: description || "",
@@ -70,19 +79,27 @@ export default {
       this.description = input;
     },
     async updateAbout() {
-      await this.$refs.form.validate();
-      if (this.valid) {
-        const docRef = db.collection("personalInfo").doc("about");
+      try {
+        await this.$refs.form.validate();
+        if (this.valid) {
+          const docRef = db.collection("personalInfo").doc("about");
 
-        await docRef.set({
-          name: this.name,
-          bio: this.bio,
-          description: this.description,
-          interests: this.modifiedInterests
-        });
+          await docRef.set({
+            name: this.name,
+            bio: this.bio,
+            description: this.description,
+            interests: this.modifiedInterests
+          });
 
+          this.snackbar = true;
+          this.hasErr = false;
+          this.snackbarMsg = "Successfully updated About.";
+        }
+      } catch (err) {
+        console.error();
         this.snackbar = true;
-        console.log("Successfully updated About");
+        this.hasErr = false;
+        this.snackbarMsg = "Something goes wrong! Cannot update About.";
       }
     },
 

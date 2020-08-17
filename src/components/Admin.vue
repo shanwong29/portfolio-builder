@@ -14,6 +14,7 @@
             name="input-10-1"
             label="Password"
             @click:append="showPassword = !showPassword"
+            v-on:keyup.enter="login"
           ></v-text-field>
         </div>
 
