@@ -12,7 +12,6 @@ new Vue({
   store,
   router,
   vuetify,
-
   render: (h) => h(App),
 });
 

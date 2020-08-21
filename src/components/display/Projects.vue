@@ -1,17 +1,24 @@
 <template>
   <div id="projects" class="py-16">
     <h1>Projects</h1>
-    <div class="projects-wrapper">
-      <template v-for="project in filteredGithubData">
-        <v-hover
-          v-slot:default="{ hover }"
-          v-if="
-          !dbProjectsData[project.id] || !dbProjectsData[project.id]['hide']
-        "
-          :key="project.id"
-        >
-          <v-card class="mx-auto my-4" max-width="300">
-            <v-img height="200" :src="getCoverUrl(project.id)">
+
+    <carousel
+      :navigationEnabled="true"
+      :scrollPerPage="true"
+      :perPage="1"
+      :perPageCustom="[[768, 2], [1024, 3]]"
+      paginationColor="grey"
+      paginationActiveColor="pink"
+    >
+      <slide
+        v-for="(project) in getShownProjects"
+        :key="project.id"
+        :style="{ width: getCardWidth + '%' }"
+        class="slide"
+      >
+        <v-hover v-slot:default="{ hover }">
+          <v-card class="card">
+            <v-img height="220" :src="getCoverUrl(project.id)">
               <v-expand-transition>
                 <div
                   v-if="hover"
@@ -19,13 +26,15 @@
                   style="height: 100%;"
                 >
                   <v-btn
-                    class="mr-2 link-btn"
+                    class="mr-2"
                     color="primary"
                     rounded
                     :href="project.html_url"
                     target="_blank"
                     rel="noopener noreferrer"
-                  >Code</v-btn>
+                  >
+                    <v-icon left>mdi-github</v-icon>Code
+                  </v-btn>
                   <v-btn
                     class="link-btn"
                     color="primary"
@@ -33,7 +42,9 @@
                     :href="project.homepage"
                     target="_blank"
                     rel="noopener noreferrer"
-                  >Live</v-btn>
+                  >
+                    <v-icon left>mdi-earth</v-icon>Live
+                  </v-btn>
                 </div>
               </v-expand-transition>
             </v-img>
@@ -49,8 +60,8 @@
             <v-card-text
               class="pb-4 pt-0"
               v-if="
-            dbProjectsData[project.id] && dbProjectsData[project.id]['stacks']
-          "
+              dbProjectsData[project.id] && dbProjectsData[project.id]['stacks']
+            "
             >
               <v-chip
                 class="mr-1 mt-1"
@@ -61,22 +72,55 @@
             </v-card-text>
           </v-card>
         </v-hover>
-      </template>
-    </div>
+      </slide>
+    </carousel>
   </div>
 </template>
 
 <script>
 import { mapGetters, mapState } from "vuex";
+import { Carousel, Slide } from "vue-carousel";
 
 export default {
   name: "Projects",
-  components: {},
+  components: {
+    Carousel,
+    Slide
+  },
   computed: {
     ...mapGetters(["filteredGithubData"]),
-    ...mapState(["dbProjectsData"])
+    ...mapState(["dbProjectsData"]),
+    getCardWidth() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return "100";
+        case "sm":
+          return "50";
+        default:
+          return "33";
+        // case "lg":
+        //   return "600px";
+        // case "xl":
+        //   return "800px";
+      }
+    },
+    getShownProjects() {
+      const shownProjects = this.filteredGithubData.filter(el => {
+        return (
+          !this.dbProjectsData[el.id] ||
+          this.dbProjectsData[el.id]["hide"] != true
+        );
+      });
+      return shownProjects;
+    }
   },
   methods: {
+    getSlideClass(index) {
+      if (index) {
+        return "slide activeSlide";
+      }
+      return "slide";
+    },
     getCoverUrl(projectId) {
       if (
         this.dbProjectsData[projectId] &&
@@ -86,91 +130,29 @@ export default {
       }
       return `https://cdn.vuetifyjs.com/images/parallax/material.jpg`;
     }
-  },
-
-  data() {
-    return {
-      stackLists: {
-        "repos-checker-2.0": [
-          "React",
-          "Node",
-          "Express",
-          "CSS Modules",
-          "GraphQL",
-          "TypeScript",
-          "Github Action",
-          "Docker"
-        ],
-
-        "rick-and-morty-app": [
-          "React",
-          "styled-components",
-          "Jest",
-          "React Testing Library",
-          "Rick and Morty API",
-          "Docker"
-        ],
-        "arabic-roman-calc": ["React", "styled-components", "Docker"],
-        "MERN-app-setup": [
-          "Webpack",
-          "Babel",
-          "React",
-          "Node",
-          "Mongoose",
-          "MongoDB Atlas",
-          "Docker"
-        ],
-        "photo-gallery": [
-          "React",
-          "Node",
-          "Express",
-          "Unsplash API",
-          "Jest",
-          "React Testing Library",
-          "Enzyme",
-          "Docker"
-        ],
-
-        Kiez: [
-          "React",
-          "Node",
-          "Express",
-          "MongoDB",
-          "Cloudinary",
-          "Socket.IO",
-          "Google Geocoding"
-        ],
-        "flavor-it": [
-          "Node",
-          "Express",
-          "MongoDB",
-          "handlebars",
-          "Cloudinary",
-          "Bootstrap"
-        ],
-        "Xmas-game": ["p5.js"]
-      }
-    };
   }
 };
 </script>
 
 <style scoped>
-.projects-wrapper {
-  display: flex;
-  flex-wrap: wrap;
+.VueCarousel-slide {
+  position: relative;
+}
+
+.slide {
+  transform: scale(0.95);
+}
+
+.card {
+  height: 470px;
 }
 
 .v-card--reveal {
   align-items: center;
   bottom: 0;
   justify-content: center;
-  /* opacity: 0.7; */
   background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
   width: 100%;
-}
-.link-btn {
-  opacity: 1.5;
 }
 </style>
