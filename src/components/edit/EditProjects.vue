@@ -36,12 +36,8 @@
               </v-col>
               <v-col>
                 <v-btn @click="toggleShowProject(project.name, project.id)">
-                  <v-icon left>{{ fieldExist(project.id, 'hide') ?'mdi-eye':'mdi-eye-off'}}</v-icon>
-                  {{
-                  fieldExist(project.id, 'hide')
-                  ? `Show this project`
-                  : `Hide this project`
-                  }}
+                  <v-icon left>{{ fieldExist(project.id, 'show') ?'mdi-eye-off':'mdi-eye'}}</v-icon>
+                  {{ fieldExist(project.id, 'show') ?`Hide this project`:`Show this project`}}
                 </v-btn>
 
                 <h4 class="my-4 mx-0">Tech stacks</h4>
@@ -194,14 +190,14 @@ export default {
         await docRef.set(
           {
             name: projectName,
-            hide: true
+            show: true
           },
           { merge: true }
         );
       } else {
         await docRef.set(
           {
-            hide: !this.dbProjectsData[projectId]["hide"]
+            show: !this.dbProjectsData[projectId]["show"]
           },
           { merge: true }
         );
