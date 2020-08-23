@@ -44,7 +44,6 @@ import { mapState } from "vuex";
 
 export default {
   components: { EditAbout, EditContact, EditProjects },
-  props: ["firestoreBasicInfo", "dbProjectsData"],
   data() {
     return {
       tab: null,
@@ -64,9 +63,6 @@ export default {
   }
 };
 </script>
-
-
-
 
 <style>
 .pop-up {

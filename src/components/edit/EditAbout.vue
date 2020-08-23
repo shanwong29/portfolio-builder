@@ -33,31 +33,16 @@
     <div class="d-flex justify-end">
       <v-btn color="primary" class="ma-2" @click="updateAbout">Save Changes</v-btn>
     </div>
-    <v-snackbar
-      v-model="snackbar"
-      :color="hasErr? 'error': ''"
-      :text="hasErr"
-      bottom
-      multi-line
-      :timeout="hasErr? -1: 2000"
-    >
-      {{snackbarMsg}}
-      <template v-slot:action="{ attrs }">
-        <v-btn
-          :color="hasErr? 'grey': 'blue'"
-          text
-          v-bind="attrs"
-          @click="snackbar = false; hasErr=false"
-        >Close</v-btn>
-      </template>
-    </v-snackbar>
+    <snackbar v-model="snackbar" :hasErr="hasErr" :snackbarMsg="snackbarMsg" />
   </v-form>
 </template>
 
 <script>
 import { db } from "../../firebase/init";
+import Snackbar from "../Snackbar";
 
 export default {
+  components: { Snackbar },
   data() {
     const { name, bio, description, interests } = this.$store.state.dbAboutData;
     return {

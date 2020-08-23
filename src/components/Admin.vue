@@ -27,21 +27,26 @@
         ></long-loading-btn>
       </v-form>
     </v-card>
+    <snackbar v-model="showSnackbar" :hasErr="hasErr" :snackbarMsg="snackbarMsg" />
   </v-container>
 </template>
 
 <script>
 import LongLoadingBtn from "./LongLoadingBtn";
+import Snackbar from "./Snackbar";
 import { auth } from "../firebase/init";
 export default {
-  components: { LongLoadingBtn },
+  components: { LongLoadingBtn, Snackbar },
   data() {
     return {
-      valid: false,
-      showPassword: false,
       isLoading: false,
+      hasErr: false,
+      showSnackbar: false,
+      showPassword: false,
+      valid: false,
       email: "",
       password: "",
+      snackbarMsg: "",
       emailRules: [
         v => !!v || "E-mail is required",
         v => /.+@.+\..+/.test(v) || "E-mail must be valid"
@@ -61,9 +66,14 @@ export default {
           );
           console.log(cred);
           this.$router.push("/");
+          this.showSnackbar = false;
+          this.hasErr = false;
         } catch (err) {
           console.log(err);
           this.$refs.form.resetValidation();
+          this.showSnackbar = true;
+          this.snackbarMsg = "Invalid credential";
+          this.hasErr = true;
         }
         this.isLoading = false;
       }

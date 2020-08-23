@@ -1,0 +1,83 @@
+<template>
+  <div class="d-flex justify-center align-center mt-8 mb-4">
+    <v-sheet :style="{ maxWidth: getPanelWidth + '%' }">
+      <v-slide-group v-model="model" center-active show-arrows>
+        <v-slide-item
+          v-for="(stack, index) in getUsedTechStacks"
+          :key="index"
+          v-slot:default="{ active }"
+        >
+          <v-btn
+            :color="active ? 'primary' : 'blue-grey lighten-5'"
+            class="ma-1"
+            rounded
+            small
+            @click="setChosenStack(index, stack)"
+          >{{ stack }}</v-btn>
+        </v-slide-item>
+      </v-slide-group>
+    </v-sheet>
+    <v-btn icon @click="clearTechStacksFilter">
+      <v-icon>mdi-close-circle</v-icon>
+    </v-btn>
+  </div>
+</template>
+
+<script>
+import { mapState } from "vuex";
+
+export default {
+  name: "Projects",
+  data() {
+    return {
+      chosenStack: "",
+      model: null
+    };
+  },
+  computed: {
+    ...mapState(["dbProjectsData"]),
+    getUsedTechStacks() {
+      let allTechStacks = [];
+      for (const project in this.dbProjectsData) {
+        if (
+          this.dbProjectsData[project]["stacks"] &&
+          this.dbProjectsData[project]["show"]
+        ) {
+          allTechStacks = allTechStacks.concat(
+            this.dbProjectsData[project]["stacks"]
+          );
+        }
+      }
+
+      const noDuplicatedStacks = new Set(allTechStacks);
+      return Array.from(noDuplicatedStacks).sort();
+    },
+    getPanelWidth() {
+      switch (this.$vuetify.breakpoint.name) {
+        case "xs":
+          return "87";
+        case "sm":
+          return "77";
+        default:
+          return "70";
+      }
+    }
+  },
+
+  methods: {
+    clearTechStacksFilter() {
+      this.$emit("chosenTechStackChanged", "");
+      this.model = null;
+      this.chosenStack = "";
+    },
+    setChosenStack(index, stack) {
+      this.$emit("chosenTechStackChanged", stack);
+      this.model = index;
+      this.chosenStack = stack;
+    }
+  }
+};
+</script>
+
+<style>
+</style>
