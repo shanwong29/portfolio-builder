@@ -49,9 +49,9 @@ export const store = new Vuex.Store({
   },
 
   actions: {
-    async getDbProjects(context) {
+    getDbProjects(context) {
       const projectsData = {};
-      await db.collection("projects").onSnapshot((snapshot) => {
+      db.collection("projects").onSnapshot((snapshot) => {
         snapshot.forEach((doc) => {
           projectsData[doc.id] = doc.data();
         });
@@ -63,9 +63,8 @@ export const store = new Vuex.Store({
       });
     },
 
-    async getDbAbout(context) {
-      await db
-        .collection("personalInfo")
+    getDbAbout(context) {
+      db.collection("personalInfo")
         .doc("about")
         .onSnapshot((doc) => {
           context.commit({
@@ -74,9 +73,8 @@ export const store = new Vuex.Store({
           });
         });
     },
-    async getDbContact(context) {
-      await db
-        .collection("personalInfo")
+    getDbContact(context) {
+      db.collection("personalInfo")
         .doc("contact")
         .onSnapshot((doc) => {
           context.commit({

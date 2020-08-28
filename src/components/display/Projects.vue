@@ -1,5 +1,5 @@
 <template>
-  <div id="projects" class="py-16">
+  <div>
     <h1>Projects</h1>
     <projects-filter @chosenTechStackChanged="getStackFilteredProjectsId($event)" />
     <projects-carousel
@@ -60,25 +60,5 @@ export default {
 };
 </script>
 
-<style scoped>
-.VueCarousel-slide {
-  position: relative;
-}
-
-.slide {
-  transform: scale(0.95);
-}
-
-.card {
-  height: 470px;
-}
-
-.v-card--reveal {
-  align-items: center;
-  bottom: 0;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.7);
-  position: absolute;
-  width: 100%;
-}
+<style>
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <v-app>
+  <v-app id="app">
     <Navbar />
-    <v-container fluid class="content">
+    <v-container fluid class="pa-0">
       <router-view></router-view>
     </v-container>
   </v-app>
@@ -16,6 +16,13 @@ export default {
   components: { Navbar },
   name: "App",
   async created() {
+    const theme = localStorage.getItem("isDarkMode");
+    if (theme === "true") {
+      this.$vuetify.theme.dark = true;
+    } else {
+      this.$vuetify.theme.dark = false;
+    }
+
     // get data from github
     const { data } = await axios.get(
       "https://api.github.com/users/shanwong29/repos?per_page=100&sort=created&direction=desc"
@@ -24,7 +31,7 @@ export default {
     this.$store.commit({ type: "setGithubData", data });
     try {
       //check if this user is a admin when page is loaded and everytime when there is auth changes
-      await auth.onAuthStateChanged(async user => {
+      auth.onAuthStateChanged(async user => {
         if (user) {
           console.log("login user:", user);
           const idTokenResult = await user.getIdTokenResult();
@@ -46,10 +53,9 @@ export default {
 };
 </script>
 <style>
-@media (min-width: 600px) {
-  .content {
-    width: 75%;
-  }
+#app {
+  background-color: var(--v-background-base);
+  color: var(--v-text-base);
 }
 
 html {

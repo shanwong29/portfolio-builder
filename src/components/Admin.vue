@@ -1,7 +1,7 @@
 <template>
-  <v-container>
-    <h2>Admin Login</h2>
-    <v-card class="mx-auto mt-8 py-8 px-8" width="450px" height="400px">
+  <v-container class="pt-16 d-flex flex-column">
+    <h2 class="mt-8 mx-auto">Admin Login</h2>
+    <v-card class="mx-auto mt-8 pa-8" width="450px" height="400px">
       <v-form ref="form" v-model="valid" class="d-flex flex-column form">
         <div>
           <v-text-field v-model="email" label="Email" :rules="emailRules" clearable class="mb-4"></v-text-field>
@@ -82,7 +82,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .form {
   height: 100%;
 }

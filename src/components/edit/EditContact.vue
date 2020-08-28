@@ -3,7 +3,12 @@
     <v-text-field v-model="linkedin" :rules="urlRules" label="Linkedin" required></v-text-field>
     <v-text-field v-model="email" :rules="emailRules" label="email"></v-text-field>
     <div class="d-flex justify-end">
-      <v-btn color="primary" class="ma-2" dark @click="updateContact">Save Changes</v-btn>
+      <v-btn
+        color="primary"
+        :class="[$vuetify.theme.dark?'black--text':'white--text','ma-2']"
+        dark
+        @click="updateContact"
+      >Save Changes</v-btn>
     </div>
     <snackbar v-model="showSnackbar" :hasErr="hasErr" :snackbarMsg="snackbarMsg" />
   </v-form>
@@ -22,6 +27,7 @@ export default {
       linkedin: linkedin || "",
       hasErr: false,
       showSnackbar: false,
+      snackbarMsg: "",
       valid: false,
       emailRules: [
         v => !!v || "E-mail is required",

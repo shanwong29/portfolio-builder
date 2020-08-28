@@ -1,32 +1,104 @@
 <template>
-  <v-app-bar hide-on-scroll fixed min-width="100%">
-    <v-btn class="mx-1" to="/" text small color="primary" v-if="!isMainPage">
-      <v-icon left>mdi-home</v-icon>Home
-    </v-btn>
-    <div v-else>
-      <v-btn class="mx-1" href="/#about" text small color="primary">
-        <v-icon left>mdi-heart</v-icon>About
+  <v-app-bar color="navbar" hide-on-scroll fixed width="100%">
+    <template v-if="isPhone">
+      <v-btn to="/" text icon color="primary" v-if="!isMainPage">
+        <v-icon>mdi-home</v-icon>
       </v-btn>
-      <v-btn class="mx-1" href="/#projects" text small color="primary">
-        <v-icon left>mdi-briefcase</v-icon>Projects
-      </v-btn>
-      <v-btn class="mx-1" href="/#contact" text small color="primary">
-        <v-icon left>mdi-phone-classic</v-icon>Contact
-      </v-btn>
-    </div>
-    <v-spacer></v-spacer>
-    <div v-if="isAdmin">
-      <v-btn color="primary" class="ma-2" dark @click="toogleEditPopUp">Edit</v-btn>
+      <div v-else>
+        <v-btn class="mr-1" href="/#about" text icon color="primary">
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
+        <v-btn class="mx-1" href="/#projects" text icon color="primary">
+          <v-icon>mdi-briefcase</v-icon>
+        </v-btn>
+        <v-btn class="mx-1" href="/#contact" text icon color="primary">
+          <v-icon>mdi-phone-classic</v-icon>
+        </v-btn>
+      </div>
 
-      <v-tooltip bottom>
+      <v-spacer></v-spacer>
+      <v-switch
+        :input-value="$vuetify.theme.dark"
+        @change="handleThemeChange"
+        :append-icon="$vuetify.theme.dark ? 'mdi-weather-night' : ''"
+        :prepend-icon="$vuetify.theme.dark ? '' : 'mdi-white-balance-sunny'"
+        hide-details
+        color="secondary"
+        class="mx-1 mx-sm-4"
+      ></v-switch>
+      <v-menu bottom offset-y v-if="isAdmin">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-bind="attrs" v-on="on" @click="logout">
-            <v-icon>mdi-exit-to-app</v-icon>
+          <v-btn icon color="secondary" v-bind="attrs" v-on="on">
+            <v-icon>mdi-dots-vertical</v-icon>
           </v-btn>
         </template>
-        <span>Logout</span>
-      </v-tooltip>
-    </div>
+
+        <v-list>
+          <v-list-item v-for="(item, i) in hamburgerLists" :key="i" @click="item.onClickEvent">
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </template>
+
+    <template v-else>
+      <v-btn class="mx-1" to="/" text small color="primary" v-if="!isMainPage">
+        <v-icon left>mdi-home</v-icon>Home
+      </v-btn>
+
+      <div v-else>
+        <v-btn class="mx-1" href="/#about" text small color="primary">
+          <v-icon left>mdi-heart</v-icon>About
+        </v-btn>
+        <v-btn class="mx-1" href="/#projects" text small color="primary">
+          <v-icon left>mdi-briefcase</v-icon>Projects
+        </v-btn>
+        <v-btn class="mx-1" href="/#contact" text small color="primary">
+          <v-icon left>mdi-phone-classic</v-icon>Contact
+        </v-btn>
+      </div>
+
+      <v-spacer></v-spacer>
+
+      <v-switch
+        :input-value="$vuetify.theme.dark"
+        @change="handleThemeChange"
+        :append-icon="$vuetify.theme.dark ? 'mdi-weather-night' : ''"
+        :prepend-icon="$vuetify.theme.dark ? '' : 'mdi-white-balance-sunny'"
+        hide-details
+        color="secondary"
+        class="mx-1 mx-sm-4"
+      ></v-switch>
+
+      <div v-if="isAdmin">
+        <v-btn
+          v-if="isPhone"
+          color="editBtn"
+          :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+          @click="toogleEditPopUp"
+          icon
+        >
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+
+        <v-btn
+          v-else
+          color="editBtn"
+          class="ma-2"
+          :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+          @click="toogleEditPopUp"
+        >Edit</v-btn>
+
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn icon v-bind="attrs" v-on="on" @click="logout">
+              <v-icon>mdi-exit-to-app</v-icon>
+            </v-btn>
+          </template>
+          <span>Logout</span>
+        </v-tooltip>
+      </div>
+    </template>
   </v-app-bar>
 </template>
 
@@ -35,7 +107,19 @@ import { auth } from "../firebase/init";
 import { mapState } from "vuex";
 export default {
   name: "Navbar",
+  data() {
+    return {
+      hamburgerLists: [
+        { title: "Edit", onClickEvent: this.toogleEditPopUp },
+        { title: "Logout", onClickEvent: this.logout }
+      ]
+    };
+  },
   methods: {
+    handleThemeChange() {
+      this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
+      localStorage.setItem("isDarkMode", this.$vuetify.theme.dark.toString());
+    },
     logout() {
       auth.signOut().then(() => {
         console.log("logout");
@@ -49,9 +133,16 @@ export default {
     ...mapState(["isAdmin"]),
     isMainPage() {
       return this.$route.name === "mainPage";
+    },
+    isPhone() {
+      return this.$vuetify.breakpoint.xs;
     }
   }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.wrapper {
+  align-items: center;
+}
+</style>

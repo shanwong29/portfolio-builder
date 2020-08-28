@@ -31,7 +31,11 @@
       </v-btn>
     </div>
     <div class="d-flex justify-end">
-      <v-btn color="primary" class="ma-2" @click="updateAbout">Save Changes</v-btn>
+      <v-btn
+        color="primary"
+        :class="[$vuetify.theme.dark?'black--text':'white--text','ma-2']"
+        @click="updateAbout"
+      >Save Changes</v-btn>
     </div>
     <snackbar v-model="snackbar" :hasErr="hasErr" :snackbarMsg="snackbarMsg" />
   </v-form>
@@ -83,7 +87,7 @@ export default {
       } catch (err) {
         console.error();
         this.snackbar = true;
-        this.hasErr = false;
+        this.hasErr = true;
         this.snackbarMsg = "Something goes wrong! Cannot update About.";
       }
     },

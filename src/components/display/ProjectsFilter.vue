@@ -1,6 +1,6 @@
 <template>
-  <div class="d-flex justify-center align-center mt-8 mb-4">
-    <v-sheet :style="{ maxWidth: getPanelWidth + '%' }">
+  <div class="d-flex justify-center align-center mt-4 mt-sm-8 mb-4">
+    <v-sheet :style="{ maxWidth: getPanelWidth + '%' }" color="projectsBkg">
       <v-slide-group v-model="model" center-active show-arrows>
         <v-slide-item
           v-for="(stack, index) in getUsedTechStacks"
@@ -9,7 +9,7 @@
         >
           <v-btn
             :color="active ? 'primary' : 'blue-grey lighten-5'"
-            class="ma-1"
+            :class="[$vuetify.theme.dark || !$vuetify.theme.dark && !active?'black--text':'white--text','ma-1']"
             rounded
             small
             @click="setChosenStack(index, stack)"

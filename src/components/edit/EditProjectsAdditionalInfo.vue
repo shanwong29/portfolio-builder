@@ -19,7 +19,7 @@
     <div class="d-flex align-center mt-2">
       <v-text-field v-model="stackToBeAdded" label="Add Stack" v-on:keyup.enter="addStack"></v-text-field>
 
-      <v-btn color="success" @click="addStack" class="mx-2" large icon>
+      <v-btn color="success" @click="addStack" class="mx-2" icon>
         <v-icon>mdi-plus-circle-outline</v-icon>
       </v-btn>
     </div>

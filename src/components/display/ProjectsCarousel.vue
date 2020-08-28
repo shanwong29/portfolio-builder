@@ -1,30 +1,35 @@
 <template>
   <carousel
-    :navigationEnabled="true"
+    :navigationEnabled="$vuetify.breakpoint.xs? false : true"
     :scrollPerPage="true"
     :perPage="1"
-    :perPageCustom="[[768, 2], [1024, 3]]"
-    paginationColor="grey"
-    paginationActiveColor="pink"
+    :perPageCustom="[
+     [600, 2],[960, 3]
+    ]"
+    paginationColor="#839496"
+    :paginationActiveColor="getActivePaginationColor"
   >
     <slide
       v-for="project in getStackFilteredShownProjects"
       :key="project.id"
-      :style="{ width: getCardWidth + '%' }"
+      :style="{ width: getCardWidth + 'vw' }"
       class="slide"
     >
       <v-hover v-slot:default="{ hover }">
         <v-card class="card">
-          <v-img height="220" :src="getCoverUrl(project.id)">
+          <v-img height="225" :src="getCoverUrl(project.id)">
             <v-expand-transition>
               <div
                 v-if="hover"
-                class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal display-3 white--text"
+                class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal display-3"
                 style="height: 100%;"
               >
                 <v-btn
-                  class="mr-2"
-                  color="primary"
+                  :class="[
+                    $vuetify.theme.dark ? 'black--text' : 'white--text',
+                    'mr-2',
+                  ]"
+                  color="secondary"
                   rounded
                   :href="project.html_url"
                   target="_blank"
@@ -33,8 +38,8 @@
                   <v-icon left>mdi-github</v-icon>Code
                 </v-btn>
                 <v-btn
-                  class="link-btn"
-                  color="primary"
+                  :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+                  color="secondary"
                   rounded
                   :href="project.homepage"
                   target="_blank"
@@ -95,14 +100,14 @@ export default {
         case "xs":
           return "90";
         case "sm":
-          return "50";
+          return "35";
         default:
-          return "33";
-        // case "lg":
-        //   return "600px";
-        // case "xl":
-        //   return "800px";
+          return "25";
       }
+    },
+    getActivePaginationColor() {
+      const theme = this.$vuetify.theme.dark ? "dark" : "light";
+      return this.$vuetify.theme.themes[theme].primary;
     },
     getStackFilteredShownProjects() {
       if (!this.idListOfProjectsWithChosenStack.length) {
@@ -131,17 +136,20 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .VueCarousel-slide {
   position: relative;
 }
 
-.slide {
-  transform: scale(0.95);
+.VueCarousel-navigation-next,
+.VueCarousel-navigation-prev {
+  color: var(--v-primary-base) !important;
+  font-size: 26px;
 }
 
-.card {
-  min-height: 470px;
+div[style].VueCarousel-dot-container,
+button[style].VueCarousel-dot {
+  margin-top: 0 !important;
 }
 
 .v-card--reveal {
@@ -151,5 +159,13 @@ export default {
   background-color: rgba(0, 0, 0, 0.7);
   position: absolute;
   width: 100%;
+}
+
+.slide {
+  transform: scale(0.95);
+}
+
+.card {
+  min-height: 470px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div id="contact" class="py-16">
+  <div class="pb-16">
     <h1>Contact Me</h1>
 
     <div class="buttons-wrapper">
@@ -55,6 +55,6 @@ export default {
 .buttons-wrapper {
   display: flex;
   justify-content: center;
-  margin-top: 10px;
+  margin-top: 25px;
 }
 </style>

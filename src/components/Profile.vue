@@ -1,13 +1,17 @@
 <template>
   <div>
     <EditPopUp v-if="isAdmin" />
-    <About />
+    <div id="about" class="section">
+      <About />
+    </div>
     <v-divider></v-divider>
-
-    <Projects />
+    <div id="projects" class="section">
+      <Projects />
+    </div>
     <v-divider></v-divider>
-
-    <Contact />
+    <div id="contact" class="section">
+      <Contact />
+    </div>
   </div>
 </template>
 
@@ -26,5 +30,24 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "~vuetify/src/styles/settings/_variables";
+
+#projects {
+  background-color: var(--v-projectsBkg-base);
+}
+
+.theme--light.v-divider {
+  border-color: var(--v-projectsBkg-base) !important;
+}
+
+.section {
+  padding: 30px 15px;
+}
+
+@media #{map-get($display-breakpoints, 'sm-and-up')} {
+  .section {
+    padding: 64px 12vw;
+  }
+}
 </style>
