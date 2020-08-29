@@ -4,26 +4,37 @@
     :value="value"
     :color="hasErr? 'error': ''"
     :text="hasErr"
-    bottom
+    :top="top"
+    :bottom="top?false:true"
     multi-line
-    :timeout="hasErr? -1: 2000"
+    :timeout="getTimeout"
   >
-    {{snackbarMsg}}
+    <div style="white-space: pre-line;">{{snackbarMsg}}</div>
     <template v-slot:action="{ attrs }">
       <v-btn
         :color="hasErr? 'grey': 'blue'"
         text
         v-bind="attrs"
         @click="showSnackbarStateChanged(false)"
-      >Close</v-btn>
+      >{{hasErr?'close':'ok'}}</v-btn>
     </template>
   </v-snackbar>
 </template>
 
 <script>
 export default {
-  props: ["hasErr", "snackbarMsg", "value"],
-
+  props: ["hasErr", "snackbarMsg", "value", "timeout", "top"],
+  computed: {
+    getTimeout() {
+      if (this.hasErr) {
+        return -1;
+      }
+      if (this.timeout) {
+        return this.timeout;
+      }
+      return 2000;
+    }
+  },
   methods: {
     showSnackbarStateChanged(updatedValue) {
       this.$emit("input", updatedValue);

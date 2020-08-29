@@ -25,20 +25,29 @@ exports.addAdminRole = functions.https.onCall(async (data, context) => {
       };
     }
 
+    // Add user
+    const user = await admin.auth().createUser({
+      email: data.email,
+      password: data.password,
+      displayName: data.displayName,
+    });
+    // here the user is already signuped & logined, if not specified, firebase assign a uuid to this user
+
     // get user and add custom claim (admin)
-    const user = await admin.auth().getUserByEmail(data.email);
     await admin.auth().setCustomUserClaims(user.uid, { admin: true });
 
     // create user collection
     await docRef.set({
-      name: data.name,
+      name: data.displayName,
       interests: [],
     });
 
     return {
-      message: `Success! ${data.email} has been made as admin.`,
+      message: `Success!\n${data.email} has been set as admin account.`,
     };
   } catch (err) {
-    console.log(err);
+    return {
+      error: `${err}`,
+    };
   }
 });

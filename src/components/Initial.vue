@@ -1,20 +1,18 @@
 <template>
-  <v-container class="pt-16">
+  <v-container class="pt-8 mt-16">
     <h2>Welcome to use this Portfolio Starter.</h2>
-    <p>
-      By submitting this initial form, you email will be set as an Admin user in
-      your firestore.
-    </p>
-    <p>
-      When this step is done, remember to change the security setting in
-      firebase.
+    <p class="mb-5">
+      By submitting this initial form, your email will be set as an Admin user in
+      your related firebase project.
+      <br />Before doing this step, make sure the security setting in
+      firebase have been set to that only Admin user can write.
     </p>
 
     <v-card class="mx-auto my-auto py-8 px-8" width="450px" height="400px">
       <v-form ref="form" v-model="valid" class="d-flex flex-column form">
-        <div>
+        <div class="mb-4">
           <v-text-field
-            v-model="userFullName"
+            v-model="userDisplayName"
             label="Your Display Name"
             :rules="requiredRule"
             clearable
@@ -53,25 +51,37 @@
         ></long-loading-btn>
       </v-form>
     </v-card>
+    <snackbar
+      @input="redirectToLogin"
+      :value="showSnackbar"
+      :hasErr="hasErr"
+      :snackbarMsg="snackbarMsg"
+      :timeout="-1"
+      :top="true"
+    />
   </v-container>
 </template>
 
 <script>
 import { auth, db, functions } from "../firebase/init";
 import LongLoadingBtn from "./LongLoadingBtn";
+import Snackbar from "./Snackbar";
 
 export default {
-  components: { LongLoadingBtn },
+  components: { LongLoadingBtn, Snackbar },
   data() {
     return {
-      valid: false,
+      userDisplayName: "",
       email: "",
-      isLoading: false,
       password: "",
       reenteredPassword: "",
-      userFullName: "",
+      snackbarMsg: "",
+      showSnackbar: false,
+      hasErr: false,
+      isLoading: false,
       showPassword: false,
       showReenteredPassword: false,
+      valid: false,
       requiredRule: [v => !!v || "This field is required"],
       emailRules: [v => /.+@.+\..+/.test(v) || "E-mail must be valid"],
       passwordRules: [
@@ -95,7 +105,7 @@ export default {
       const docRef = db.collection("personalInfo").doc("about");
       const doc = await docRef.get();
       if (doc.exists) {
-        // this.$router.push({ name: "mainPage" });
+        this.$router.push({ name: "mainPage" });
       }
     } catch (err) {
       console.log(err);
@@ -106,15 +116,17 @@ export default {
       return this.password === this.reenteredPassword;
     },
 
+    redirectToLogin() {
+      this.showSnackbar = false;
+      if (!this.hasErr) {
+        this.$router.push({ name: "admin" });
+      }
+    },
     async signup() {
       await this.$refs.form.validate();
       if (this.valid) {
         this.isLoading = true;
         try {
-          // Add user
-          await auth.createUserWithEmailAndPassword(this.email, this.password);
-          // here the user is already signuped & logined, and firebase assign a uuid to this user
-
           // get our deployed fn from firebase
           const addAdminRole = functions.httpsCallable(
             "addAdminRole" /* need to be same as the name of fn */
@@ -123,26 +135,29 @@ export default {
           //  const AddAdminRole return a function
           //  use this fn to set this user as admin and create "about" doc
           const { data } = await addAdminRole({
-            name: this.userFullName,
-            email: this.email
+            displayName: this.userDisplayName,
+            email: this.email,
+            password: this.password
           });
 
-          if (data.error) {
-            this.isLoading = false;
-          } else {
+          if (data.message) {
             await auth.signOut();
-            // todo: the isloading is set after alert is clicked.
             this.isLoading = false;
-            alert(
-              `${data.message} \nApp has been initialized. \nRemember to change the firebase security setting.`
-            );
+            this.hasErr = false;
+            this.snackbarMsg = `${data.message}\nApp has been initialized.\nYou will be redirected to Login page.`;
+          } else if (data.error) {
+            this.isLoading = false;
+            this.hasErr = true;
+            this.snackbarMsg = `${data.error}`;
+            this.$refs.form.resetValidation();
           }
 
-          alert(`${data.error}`);
-
-          this.$router.push({ name: "admin" });
+          this.showSnackbar = true;
         } catch (err) {
           console.log(err);
+          this.isLoading = false;
+          this.hasErr = true;
+          this.snackbarMsg = `${err}`;
           this.$refs.form.resetValidation();
         }
       }
@@ -151,4 +166,5 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+</style>
