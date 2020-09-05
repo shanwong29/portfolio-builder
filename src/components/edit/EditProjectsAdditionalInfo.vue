@@ -81,10 +81,14 @@ export default {
             { merge: true }
           );
         } else {
+          const updatedStacks = new Set([
+            ...this.dbProjectsData[this.projectId]["stacks"],
+            this.stackToBeAdded.trim()
+          ]);
+
+          const sortedStacks = Array.from(updatedStacks).sort();
           await docRef.update({
-            stacks: firebase.firestore.FieldValue.arrayUnion(
-              this.stackToBeAdded.trim()
-            )
+            stacks: sortedStacks
           });
         }
 

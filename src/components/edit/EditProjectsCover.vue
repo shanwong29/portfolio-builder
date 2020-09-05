@@ -3,7 +3,12 @@
     <v-card>
       <v-img :src="getCoverUrl(projectId)" aspect-ratio="1.7"></v-img>
       <v-overlay :absolute="true" :value="imageUrl">
-        <v-chip color="primary" label medium>Preview</v-chip>
+        <v-chip
+          color="secondary"
+          :text-color="$vuetify.theme.dark ? 'black' : 'white'"
+          label
+          medium
+        >Preview</v-chip>
       </v-overlay>
     </v-card>
     <div class="d-flex mt-2">
