@@ -5,13 +5,13 @@ import "firebase/storage";
 import "firebase/functions";
 
 var firebaseConfig = {
-  apiKey: "AIzaSyDWeZQ16XTYHBvqzPhduxxA02lmVkz4ruI",
-  authDomain: "vue-profolio.firebaseapp.com",
-  databaseURL: "https://vue-profolio.firebaseio.com",
-  projectId: "vue-profolio",
-  storageBucket: "vue-profolio.appspot.com",
-  messagingSenderId: "994884099448",
-  appId: "1:994884099448:web:50d42673a0f0c6de3f3c8d",
+  apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
+  authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_FIREBASE_MESSENGER_SENDER_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID,
 };
 
 firebase.initializeApp(firebaseConfig);

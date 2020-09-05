@@ -25,7 +25,7 @@ export default {
 
     // get data from github
     const { data } = await axios.get(
-      "https://api.github.com/users/shanwong29/repos?per_page=100&sort=created&direction=desc"
+      `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}/repos?type=all&per_page=100&sort=created&direction=desc`
     );
 
     this.$store.commit({ type: "setGithubData", data });
