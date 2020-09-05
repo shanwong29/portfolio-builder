@@ -34,7 +34,11 @@
         </template>
 
         <v-list>
-          <v-list-item v-for="(item, i) in hamburgerLists" :key="i" @click="item.onClickEvent">
+          <v-list-item
+            v-for="(item, i) in hamburgerLists"
+            :key="i"
+            @click="item.onClickEvent"
+          >
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -87,7 +91,8 @@
           class="ma-2"
           :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
           @click="toogleEditPopUp"
-        >Edit</v-btn>
+          >Edit</v-btn
+        >
 
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
@@ -103,7 +108,7 @@
 </template>
 
 <script>
-import { auth } from "../firebase/init";
+import { auth } from "../firebase-config/init";
 import { mapState } from "vuex";
 export default {
   name: "Navbar",
@@ -111,8 +116,8 @@ export default {
     return {
       hamburgerLists: [
         { title: "Edit", onClickEvent: this.toogleEditPopUp },
-        { title: "Logout", onClickEvent: this.logout }
-      ]
+        { title: "Logout", onClickEvent: this.logout },
+      ],
     };
   },
   methods: {
@@ -127,7 +132,7 @@ export default {
     },
     toogleEditPopUp() {
       this.$store.commit({ type: "toogleEditPopUp" });
-    }
+    },
   },
   computed: {
     ...mapState(["isAdmin"]),
@@ -136,8 +141,8 @@ export default {
     },
     isPhone() {
       return this.$vuetify.breakpoint.xs;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -10,7 +10,7 @@
 <script>
 import Navbar from "./components/Navbar";
 import axios from "axios";
-import { auth } from "./firebase/init";
+import { auth } from "./firebase-config/init";
 
 export default {
   components: { Navbar },
@@ -31,7 +31,7 @@ export default {
     this.$store.commit({ type: "setGithubData", data });
     try {
       //check if this user is a admin when page is loaded and everytime when there is auth changes
-      auth.onAuthStateChanged(async user => {
+      auth.onAuthStateChanged(async (user) => {
         if (user) {
           console.log("login user:", user);
           const idTokenResult = await user.getIdTokenResult();
@@ -49,7 +49,7 @@ export default {
     this.$store.dispatch("getDbAbout");
     this.$store.dispatch("getDbProjects");
     this.$store.dispatch("getDbContact");
-  }
+  },
 };
 </script>
 <style>

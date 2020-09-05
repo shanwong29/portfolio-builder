@@ -2,10 +2,10 @@
   <v-container class="pt-8 mt-16">
     <h2>Welcome to use this Portfolio Starter.</h2>
     <p class="mb-5">
-      By submitting this initial form, your email will be set as an Admin user in
-      your related firebase project.
-      <br />Before doing this step, make sure the security setting in
-      firebase have been set to that only Admin user can write.
+      By submitting this initial form, your email will be set as an Admin user
+      in your related firebase project.
+      <br />Before doing this step, make sure the security setting in firebase
+      have been set to that only Admin user can write.
     </p>
 
     <v-card class="mx-auto my-auto py-8 px-8" width="450px" height="400px">
@@ -18,7 +18,12 @@
             clearable
           ></v-text-field>
 
-          <v-text-field v-model="email" label="Email" :rules="emailRules" clearable></v-text-field>
+          <v-text-field
+            v-model="email"
+            label="Email"
+            :rules="emailRules"
+            clearable
+          ></v-text-field>
 
           <v-text-field
             v-model="password"
@@ -63,7 +68,7 @@
 </template>
 
 <script>
-import { auth, db, functions } from "../firebase/init";
+import { auth, db, functions } from "../firebase-config/init";
 import LongLoadingBtn from "./LongLoadingBtn";
 import Snackbar from "./Snackbar";
 
@@ -82,21 +87,21 @@ export default {
       showPassword: false,
       showReenteredPassword: false,
       valid: false,
-      requiredRule: [v => !!v || "This field is required"],
-      emailRules: [v => /.+@.+\..+/.test(v) || "E-mail must be valid"],
+      requiredRule: [(v) => !!v || "This field is required"],
+      emailRules: [(v) => /.+@.+\..+/.test(v) || "E-mail must be valid"],
       passwordRules: [
-        v => !!v || "This field is required",
-        v =>
-          (v && v.length >= 8) ||
-          "Password should to have at least 8 characters"
-      ],
-      reenteredPasswordRules: [
-        v => !!v || "This field is required",
-        v =>
+        (v) => !!v || "This field is required",
+        (v) =>
           (v && v.length >= 8) ||
           "Password should to have at least 8 characters",
-        v => (v && this.passwordCheck()) || "Passwords need to be matched"
-      ]
+      ],
+      reenteredPasswordRules: [
+        (v) => !!v || "This field is required",
+        (v) =>
+          (v && v.length >= 8) ||
+          "Password should to have at least 8 characters",
+        (v) => (v && this.passwordCheck()) || "Passwords need to be matched",
+      ],
     };
   },
 
@@ -137,7 +142,7 @@ export default {
           const { data } = await addAdminRole({
             displayName: this.userDisplayName,
             email: this.email,
-            password: this.password
+            password: this.password,
           });
 
           if (data.message) {
@@ -161,10 +166,9 @@ export default {
           this.$refs.form.resetValidation();
         }
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

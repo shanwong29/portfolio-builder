@@ -1,7 +1,9 @@
 <template>
   <div>
     <h1>Projects</h1>
-    <projects-filter @chosenTechStackChanged="getStackFilteredProjectsId($event)" />
+    <projects-filter
+      @chosenTechStackChanged="getStackFilteredProjectsId($event)"
+    />
     <projects-carousel
       :shownProjects="getShownProjects"
       :idListOfProjectsWithChosenStack="idListOfProjectsWithChosenStack"
@@ -11,7 +13,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
-import { db } from "../../firebase/init";
+import { db } from "../../firebase-config/init";
 import ProjectsCarousel from "./ProjectsCarousel";
 import ProjectsFilter from "./ProjectsFilter";
 
@@ -20,21 +22,21 @@ export default {
   components: { ProjectsCarousel, ProjectsFilter },
   data() {
     return {
-      idListOfProjectsWithChosenStack: []
+      idListOfProjectsWithChosenStack: [],
     };
   },
   computed: {
     ...mapGetters(["filteredGithubData"]),
     ...mapState(["dbProjectsData"]),
     getShownProjects() {
-      const shownProjects = this.filteredGithubData.filter(el => {
+      const shownProjects = this.filteredGithubData.filter((el) => {
         return (
           this.dbProjectsData[el.id] &&
           this.dbProjectsData[el.id]["show"] == true
         );
       });
       return shownProjects;
-    }
+    },
   },
 
   methods: {
@@ -47,7 +49,7 @@ export default {
           .get();
 
         const projectsIdList = [];
-        snapahot.forEach(doc => {
+        snapahot.forEach((doc) => {
           projectsIdList.push(doc.id);
         });
 
@@ -55,10 +57,9 @@ export default {
       } else {
         this.idListOfProjectsWithChosenStack = [];
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

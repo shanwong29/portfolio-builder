@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { db } from "../firebase/init";
+import { db } from "../firebase-config/init";
 
 Vue.use(Vuex);
 

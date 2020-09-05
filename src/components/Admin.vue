@@ -4,7 +4,13 @@
     <v-card class="mx-auto mt-8 pa-8" width="450px" height="400px">
       <v-form ref="form" v-model="valid" class="d-flex flex-column form">
         <div>
-          <v-text-field v-model="email" label="Email" :rules="emailRules" clearable class="mb-4"></v-text-field>
+          <v-text-field
+            v-model="email"
+            label="Email"
+            :rules="emailRules"
+            clearable
+            class="mb-4"
+          ></v-text-field>
 
           <v-text-field
             v-model="password"
@@ -27,14 +33,18 @@
         ></long-loading-btn>
       </v-form>
     </v-card>
-    <snackbar v-model="showSnackbar" :hasErr="hasErr" :snackbarMsg="snackbarMsg" />
+    <snackbar
+      v-model="showSnackbar"
+      :hasErr="hasErr"
+      :snackbarMsg="snackbarMsg"
+    />
   </v-container>
 </template>
 
 <script>
 import LongLoadingBtn from "./LongLoadingBtn";
 import Snackbar from "./Snackbar";
-import { auth } from "../firebase/init";
+import { auth } from "../firebase-config/init";
 export default {
   components: { LongLoadingBtn, Snackbar },
   data() {
@@ -48,10 +58,10 @@ export default {
       password: "",
       snackbarMsg: "",
       emailRules: [
-        v => !!v || "E-mail is required",
-        v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       ],
-      passwordRules: [v => !!v || "Password is required"]
+      passwordRules: [(v) => !!v || "Password is required"],
     };
   },
   methods: {
@@ -77,8 +87,8 @@ export default {
         }
         this.isLoading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

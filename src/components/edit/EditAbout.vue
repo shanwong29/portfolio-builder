@@ -1,6 +1,11 @@
 <template>
   <v-form ref="form" v-model="valid">
-    <v-text-field v-model="name" :rules="nameRules" label="Display Name" required></v-text-field>
+    <v-text-field
+      v-model="name"
+      :rules="nameRules"
+      label="Display Name"
+      required
+    ></v-text-field>
 
     <v-text-field v-model="bio" label="One-line Bio"></v-text-field>
 
@@ -24,7 +29,11 @@
     </div>
 
     <div class="input-wrapper">
-      <v-text-field v-model="interestToBeAdded" label="Add Interest" v-on:keyup.enter="addInterest"></v-text-field>
+      <v-text-field
+        v-model="interestToBeAdded"
+        label="Add Interest"
+        v-on:keyup.enter="addInterest"
+      ></v-text-field>
 
       <v-btn icon color="success" @click="addInterest" class="mx-2">
         <v-icon>mdi-plus-circle-outline</v-icon>
@@ -33,16 +42,17 @@
     <div class="d-flex justify-end">
       <v-btn
         color="primary"
-        :class="[$vuetify.theme.dark?'black--text':'white--text','ma-2']"
+        :class="[$vuetify.theme.dark ? 'black--text' : 'white--text', 'ma-2']"
         @click="updateAbout"
-      >Save Changes</v-btn>
+        >Save Changes</v-btn
+      >
     </div>
     <snackbar v-model="snackbar" :hasErr="hasErr" :snackbarMsg="snackbarMsg" />
   </v-form>
 </template>
 
 <script>
-import { db } from "../../firebase/init";
+import { db } from "../../firebase-config/init";
 import Snackbar from "../Snackbar";
 
 export default {
@@ -51,7 +61,7 @@ export default {
     const { name, bio, description, interests } = this.$store.state.dbAboutData;
     return {
       valid: false,
-      nameRules: [v => !!v || "Display name is required"],
+      nameRules: [(v) => !!v || "Display name is required"],
       snackbar: false,
       snackbarMsg: "",
       hasErr: false,
@@ -59,7 +69,7 @@ export default {
       bio: bio || "",
       description: description || "",
       modifiedInterests: [...interests],
-      interestToBeAdded: ""
+      interestToBeAdded: "",
     };
   },
 
@@ -77,7 +87,7 @@ export default {
             name: this.name,
             bio: this.bio,
             description: this.description,
-            interests: this.modifiedInterests
+            interests: this.modifiedInterests,
           });
 
           this.snackbar = true;
@@ -117,8 +127,8 @@ export default {
       }
       this.modifiedInterests.push(this.interestToBeAdded);
       this.interestToBeAdded = "";
-    }
-  }
+    },
+  },
 };
 </script>
 
