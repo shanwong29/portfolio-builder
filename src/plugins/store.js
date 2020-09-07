@@ -77,10 +77,12 @@ export const store = new Vuex.Store({
       db.collection("personalInfo")
         .doc("contact")
         .onSnapshot((doc) => {
-          context.commit({
-            type: "setContactData",
-            data: doc.data(),
-          });
+          if (doc.exists) {
+            context.commit({
+              type: "setContactData",
+              data: doc.data(),
+            });
+          }
         });
     },
   },

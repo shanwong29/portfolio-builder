@@ -9,19 +9,14 @@
     paginationColor="#839496"
     :paginationActiveColor="getActivePaginationColor"
   >
-    <slide
-      v-for="project in getStackFilteredShownProjects"
-      :key="project.id"
-      :style="{ width: getCardWidth + 'vw' }"
-      class="slide"
-    >
-      <v-hover v-slot:default="{ hover }">
+    <slide v-for="project in getStackFilteredShownProjects" :key="project.id" class="slide">
+      <v-hover v-slot:default="{ hover }" :style="{ width: getCardWidth + 'vw' }">
         <v-card class="card">
           <v-img height="225" :src="getCoverUrl(project.id)">
             <v-expand-transition>
               <div
                 v-if="hover"
-                class="d-flex transition-fast-in-fast-out darken-2 v-card--reveal display-3"
+                class="d-flex transition-fast-in-fast-out v-card--reveal"
                 style="height: 100%;"
               >
                 <v-btn
@@ -41,6 +36,7 @@
                   :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
                   color="secondary"
                   rounded
+                  :disabled="project.homepage? false: true"
                   :href="project.homepage"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -167,5 +163,13 @@ button[style].VueCarousel-dot {
 
 .card {
   min-height: 470px;
+}
+
+.theme--light.v-btn.v-btn--disabled:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.theme--dark.v-btn.v-btn--disabled:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {
+  background-color: rgba(255, 255, 255, 0.2) !important;
 }
 </style>

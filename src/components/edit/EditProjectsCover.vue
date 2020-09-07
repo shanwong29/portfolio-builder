@@ -8,8 +8,7 @@
           :text-color="$vuetify.theme.dark ? 'black' : 'white'"
           label
           medium
-          >Preview</v-chip
-        >
+        >Preview</v-chip>
       </v-overlay>
     </v-card>
     <div class="d-flex mt-2">
@@ -32,11 +31,7 @@
       ></long-loading-btn>
     </div>
 
-    <snackbar
-      v-model="showSnackbar"
-      :hasErr="hasErr"
-      :snackbarMsg="snackbarMsg"
-    />
+    <snackbar v-model="showSnackbar" :hasErr="hasErr" :snackbarMsg="snackbarMsg" />
   </div>
 </template>
 
@@ -60,20 +55,20 @@ export default {
       imageFile: "",
       imageType: "",
       rules: [
-        (value) =>
+        value =>
           !value ||
           value.size < 5000000 ||
-          "Photo size should be less than 5 MB!",
-      ],
+          "Photo size should be less than 5 MB!"
+      ]
     };
   },
   computed: {
-    ...mapState(["dbProjectsData"]),
+    ...mapState(["dbProjectsData"])
   },
   watch: {
     panel() {
       this.resetFileInput();
-    },
+    }
   },
   methods: {
     fieldExist(projectId, field) {
@@ -106,7 +101,7 @@ export default {
       const storageRef = storage.ref();
       const coversRef = storageRef.child(`covers/${this.imageName}`);
       var metadata = {
-        contentType: this.imageType,
+        contentType: this.imageType
       };
 
       try {
@@ -121,13 +116,14 @@ export default {
             {
               name: projectName,
               coverUrl,
+              stacks: []
             },
             { merge: true }
           );
         } else {
           await docRef.set(
             {
-              coverUrl,
+              coverUrl
             },
             { merge: true }
           );
@@ -175,8 +171,8 @@ export default {
       // this.$refs.fileupload.value = null;
       // this.$ref.fileupload.reset();
       //todo: seems no way to reset the display input text
-    },
-  },
+    }
+  }
 };
 </script>
 
