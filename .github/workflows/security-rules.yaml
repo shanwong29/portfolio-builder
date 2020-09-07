@@ -1,0 +1,21 @@
+name: Security Rules deploy
+on:
+  push:
+    paths:
+      - "security-rules/**"
+      - ".github/workflows/security-rules.yaml"
+    branches:
+      - master
+jobs:
+  Deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT_ID: ${{ secrets.VUE_APP_FIREBASE_PROJECT_ID}}
+        with:
+          args: deploy --only firestore,storage
