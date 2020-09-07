@@ -11,13 +11,15 @@ on:
     branches:
       - master
 jobs:
-  firebase-hosting:
+  Build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
+      - name: Install Dependencies
+        run: npm ci
       - name: Build the static files
         env:
           VUE_APP_GITHUB_USERNAME: ${{ secrets.VUE_APP_GITHUB_USERNAME }}
@@ -28,14 +30,27 @@ jobs:
           VUE_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.VUE_APP_FIREBASE_STORAGE_BUCKET }}
           VUE_APP_FIREBASE_MESSENGER_SENDER_ID: ${{ secrets.VUE_APP_FIREBASE_MESSENGER_SENDER_ID }}
           VUE_APP_FIREBASE_APP_ID: ${{ secrets.VUE_APP_FIREBASE_APP_ID }}
-        run: |
-          npm ci
-          CI=false npm run build
-      - name: Deploy
-        if: ${{ success() }}
-      - uses: w9jds/firebase-action@master
+        run: CI=false npm run build
+      - name: Archive Production Artifact
+        uses: actions/upload-artifact@master
         with:
-          args: deploy --only hosting
+          name: production-artifact
+          path: dist
+  Deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Download Artifact
+        uses: actions/download-artifact@master
+        with:
+          name: production-artifact
+          path: dist
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@master
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
           PROJECT_ID: ${{ secrets.VUE_APP_FIREBASE_PROJECT_ID}}
+        with:
+          args: deploy --only hosting
