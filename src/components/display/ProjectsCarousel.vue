@@ -1,16 +1,24 @@
 <template>
   <carousel
-    :navigationEnabled="$vuetify.breakpoint.xs? false : true"
+    :navigationEnabled="$vuetify.breakpoint.xs ? false : true"
     :scrollPerPage="true"
     :perPage="1"
     :perPageCustom="[
-     [600, 2],[960, 3]
+      [600, 2],
+      [960, 3],
     ]"
     paginationColor="#839496"
     :paginationActiveColor="getActivePaginationColor"
   >
-    <slide v-for="project in getStackFilteredShownProjects" :key="project.id" class="slide">
-      <v-hover v-slot:default="{ hover }" :style="{ width: getCardWidth + 'vw' }">
+    <slide
+      v-for="project in getStackFilteredShownProjects"
+      :key="project.id"
+      class="slide"
+    >
+      <v-hover
+        v-slot:default="{ hover }"
+        :style="{ width: getCardWidth + 'vw' }"
+      >
         <v-card class="card">
           <v-img height="225" :src="getCoverUrl(project.id)">
             <v-expand-transition>
@@ -36,7 +44,7 @@
                   :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
                   color="secondary"
                   rounded
-                  :disabled="project.homepage? false: true"
+                  :disabled="project.homepage ? false : true"
                   :href="project.homepage"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -52,7 +60,11 @@
           <v-card-text class="pb-2 pt-0">
             <div class="mb-2 subtitle-1">{{ project.language }}</div>
 
-            <div>{{ project.description }}</div>
+            <div
+              class="body-2"
+              v-if="project.description"
+              v-html="renderMarkDown(project.description)"
+            ></div>
           </v-card-text>
 
           <v-card-text
@@ -66,7 +78,8 @@
               small
               v-for="(stack, index) in dbProjectsData[project.id]['stacks']"
               :key="index"
-            >{{ stack }}</v-chip>
+              >{{ stack }}</v-chip
+            >
           </v-card-text>
         </v-card>
       </v-hover>
@@ -77,16 +90,20 @@
 <script>
 import { mapGetters, mapState } from "vuex";
 import { Carousel, Slide } from "vue-carousel";
+var md = require("markdown-it")();
+// =     md = new MarkdownIt();
+var emoji = require("markdown-it-emoji");
+md.use(emoji);
 
 export default {
   name: "Projects",
   components: {
     Carousel,
-    Slide
+    Slide,
   },
   props: {
     idListOfProjectsWithChosenStack: { type: Array, required: true },
-    shownProjects: { type: Array, required: true }
+    shownProjects: { type: Array, required: true },
   },
   computed: {
     ...mapGetters(["filteredGithubData"]),
@@ -109,13 +126,13 @@ export default {
       if (!this.idListOfProjectsWithChosenStack.length) {
         return this.shownProjects;
       } else {
-        return this.shownProjects.filter(el => {
+        return this.shownProjects.filter((el) => {
           return (
             this.idListOfProjectsWithChosenStack.indexOf(el.id.toString()) >= 0
           );
         });
       }
-    }
+    },
   },
 
   methods: {
@@ -127,8 +144,11 @@ export default {
         return this.dbProjectsData[projectId]["coverUrl"];
       }
       return `https://cdn.vuetifyjs.com/images/parallax/material.jpg`;
-    }
-  }
+    },
+    renderMarkDown(markdown) {
+      return md.render(markdown);
+    },
+  },
 };
 </script>
 
