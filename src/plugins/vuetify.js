@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuetify from "vuetify/lib";
+import colors from "vuetify/lib/util/colors";
 
 Vue.use(Vuetify);
 
@@ -14,6 +15,8 @@ const vuetify = new Vuetify({
         primary: "#44909d", //main buttons
         secondary: "#f59193", // projects url hover buttons
         success: "#c474c2", // add buttons in edit panel
+        light: colors.blueGrey.lighten5,
+        dark: colors.grey.darken3,
         editBtn: "#ef9c88",
       },
       dark: {
@@ -23,6 +26,8 @@ const vuetify = new Vuetify({
         primary: "#b886f7",
         secondary: "#1dddca",
         success: "#1dddca",
+        light: colors.blueGrey.lighten5,
+        dark: colors.grey.darken3,
         editBtn: "#1dddca",
       },
     },

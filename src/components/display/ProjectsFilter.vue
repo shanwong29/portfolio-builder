@@ -8,12 +8,18 @@
           v-slot:default="{ active }"
         >
           <v-btn
-            :color="active ? 'primary' : 'blue-grey lighten-5'"
-            :class="[$vuetify.theme.dark || !$vuetify.theme.dark && !active?'black--text':'white--text','ma-1']"
+            :color="active ? 'primary' : 'light'"
+            :class="[
+              $vuetify.theme.dark || (!$vuetify.theme.dark && !active)
+                ? 'black--text'
+                : 'white--text',
+              'ma-1',
+            ]"
             rounded
             small
             @click="setChosenStack(index, stack)"
-          >{{ stack }}</v-btn>
+            >{{ stack }}</v-btn
+          >
         </v-slide-item>
       </v-slide-group>
     </v-sheet>
@@ -31,7 +37,7 @@ export default {
   data() {
     return {
       chosenStack: "",
-      model: null
+      model: null,
     };
   },
   computed: {
@@ -61,7 +67,7 @@ export default {
         default:
           return "70";
       }
-    }
+    },
   },
 
   methods: {
@@ -74,10 +80,9 @@ export default {
       this.$emit("chosenTechStackChanged", stack);
       this.model = index;
       this.chosenStack = stack;
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

@@ -10,17 +10,10 @@
     paginationColor="#839496"
     :paginationActiveColor="getActivePaginationColor"
   >
-    <slide
-      v-for="project in getStackFilteredShownProjects"
-      :key="project.id"
-      class="slide"
-    >
-      <v-hover
-        v-slot:default="{ hover }"
-        :style="{ width: getCardWidth + 'vw' }"
-      >
+    <slide v-for="project in getStackFilteredShownProjects" :key="project.id" class="slide">
+      <v-hover v-slot:default="{ hover }" :style="{ width: getCardWidth + 'vw' }">
         <v-card class="card">
-          <v-img height="225" :src="getCoverUrl(project.id)">
+          <v-img height="225" :src="getCoverUrl(project.id)" class="cover">
             <v-expand-transition>
               <div
                 v-if="hover"
@@ -78,8 +71,7 @@
               small
               v-for="(stack, index) in dbProjectsData[project.id]['stacks']"
               :key="index"
-              >{{ stack }}</v-chip
-            >
+            >{{ stack }}</v-chip>
           </v-card-text>
         </v-card>
       </v-hover>
@@ -99,11 +91,11 @@ export default {
   name: "Projects",
   components: {
     Carousel,
-    Slide,
+    Slide
   },
   props: {
     idListOfProjectsWithChosenStack: { type: Array, required: true },
-    shownProjects: { type: Array, required: true },
+    shownProjects: { type: Array, required: true }
   },
   computed: {
     ...mapGetters(["filteredGithubData"]),
@@ -126,13 +118,13 @@ export default {
       if (!this.idListOfProjectsWithChosenStack.length) {
         return this.shownProjects;
       } else {
-        return this.shownProjects.filter((el) => {
+        return this.shownProjects.filter(el => {
           return (
             this.idListOfProjectsWithChosenStack.indexOf(el.id.toString()) >= 0
           );
         });
       }
-    },
+    }
   },
 
   methods: {
@@ -147,8 +139,8 @@ export default {
     },
     renderMarkDown(markdown) {
       return md.render(markdown);
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -183,6 +175,10 @@ button[style].VueCarousel-dot {
 
 .card {
   min-height: 470px;
+}
+
+.cover {
+  border-bottom: #e1e1e1 1px solid;
 }
 
 .theme--light.v-btn.v-btn--disabled:not(.v-btn--flat):not(.v-btn--text):not(.v-btn--outlined) {

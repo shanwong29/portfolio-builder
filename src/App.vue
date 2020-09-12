@@ -25,13 +25,13 @@ export default {
 
     // get data from github
     const { data } = await axios.get(
-      `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}/repos?type=all&per_page=100&sort=created&direction=desc`
+      `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}/repos?per_page=100&sort=created&direction=desc`
     );
 
     this.$store.commit({ type: "setGithubData", data });
     try {
       //check if this user is a admin when page is loaded and everytime when there is auth changes
-      auth.onAuthStateChanged(async (user) => {
+      auth.onAuthStateChanged(async user => {
         if (user) {
           console.log("login user:", user);
           const idTokenResult = await user.getIdTokenResult();
@@ -49,7 +49,7 @@ export default {
     this.$store.dispatch("getDbAbout");
     this.$store.dispatch("getDbProjects");
     this.$store.dispatch("getDbContact");
-  },
+  }
 };
 </script>
 <style>

@@ -16,14 +16,43 @@
       @input="modifyDescription"
     ></v-textarea>
 
-    <label for="text" id="interests">Interest</label>
-    <div v-for="(modifiedInterest, index) in modifiedInterests" :key="index">
-      <input type="text" :value="modifiedInterest" />
+    <p class="subtitle-1 mb-2">Interests</p>
+    <div
+      v-for="(modifiedInterest, index) in modifiedInterests"
+      :key="index"
+      class="d-flex"
+    >
+      <v-text-field
+        :style="{ width: '30%' }"
+        :value="modifiedInterest"
+        :background-color="!$vuetify.theme.dark ? 'light' : 'dark'"
+        @input="modifyInterest($event, index)"
+        hide-details
+        solo
+        rounded
+        dense
+        class="mb-2"
+      ></v-text-field>
 
-      <button @click.prevent="moveInterestUp(index)">up</button>
-      <button @click.prevent="moveInterestDown(index)">down</button>
+      <v-btn
+        icon
+        @click.prevent="moveInterestUp(index)"
+        class="ml-1"
+        :disabled="index === 0"
+      >
+        <v-icon>mdi-arrow-up-bold-circle</v-icon>
+      </v-btn>
 
-      <v-btn icon color="error" @click="deleteInterest" class="mx-2">
+      <v-btn
+        icon
+        @click.prevent="moveInterestDown(index)"
+        class="ml-1"
+        :disabled="index === modifiedInterests.length - 1"
+      >
+        <v-icon>mdi-arrow-down-bold-circle</v-icon>
+      </v-btn>
+
+      <v-btn icon color="error" @click="deleteInterest" class="ml-1">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>
@@ -77,6 +106,41 @@ export default {
     modifyDescription(input) {
       this.description = input;
     },
+
+    modifyInterest(input, index) {
+      this.modifiedInterests[index] = input;
+    },
+
+    moveInterestUp(index) {
+      if (index === 0) {
+        return;
+      }
+      const currentItem = this.modifiedInterests[index];
+      this.modifiedInterests.splice(index, 1);
+      this.modifiedInterests.splice(index - 1, 0, currentItem);
+    },
+
+    moveInterestDown(index) {
+      if (index === this.modifiedInterests.length) {
+        return;
+      }
+      const currentItem = this.modifiedInterests[index];
+      this.modifiedInterests.splice(index, 1);
+      this.modifiedInterests.splice(index + 1, 0, currentItem);
+    },
+
+    deleteInterest(index) {
+      this.modifiedInterests.splice(index, 1);
+    },
+
+    addInterest() {
+      if (!this.interestToBeAdded) {
+        return;
+      }
+      this.modifiedInterests.push(this.interestToBeAdded);
+      this.interestToBeAdded = "";
+    },
+
     async updateAbout() {
       try {
         await this.$refs.form.validate();
@@ -100,33 +164,6 @@ export default {
         this.hasErr = true;
         this.snackbarMsg = "Something goes wrong! Cannot update About.";
       }
-    },
-
-    moveInterestUp(index) {
-      if (index === 0) {
-        return;
-      }
-      const currentItem = this.modifiedInterests[index];
-      this.modifiedInterests.splice(index, 1);
-      this.modifiedInterests.splice(index - 1, 0, currentItem);
-    },
-    moveInterestDown(index) {
-      if (index === this.modifiedInterests.length) {
-        return;
-      }
-      const currentItem = this.modifiedInterests[index];
-      this.modifiedInterests.splice(index, 1);
-      this.modifiedInterests.splice(index + 1, 0, currentItem);
-    },
-    deleteInterest(index) {
-      this.modifiedInterests.splice(index, 1);
-    },
-    addInterest() {
-      if (!this.interestToBeAdded) {
-        return;
-      }
-      this.modifiedInterests.push(this.interestToBeAdded);
-      this.interestToBeAdded = "";
     },
   },
 };

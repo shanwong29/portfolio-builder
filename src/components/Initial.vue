@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { auth, db, functions } from "../firebase-config/init";
+import { auth, functions } from "../firebase-config/init";
 import LongLoadingBtn from "./LongLoadingBtn";
 import Snackbar from "./Snackbar";
 
@@ -105,17 +105,6 @@ export default {
     };
   },
 
-  async created() {
-    try {
-      const docRef = db.collection("personalInfo").doc("about");
-      const doc = await docRef.get();
-      if (doc.exists) {
-        this.$router.push({ name: "mainPage" });
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  },
   methods: {
     passwordCheck() {
       return this.password === this.reenteredPassword;
