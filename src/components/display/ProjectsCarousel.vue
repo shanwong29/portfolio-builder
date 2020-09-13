@@ -13,7 +13,7 @@
     <slide v-for="project in getStackFilteredShownProjects" :key="project.id" class="slide">
       <v-hover v-slot:default="{ hover }" :style="{ width: getCardWidth + 'vw' }">
         <v-card class="card">
-          <v-img height="225" :src="getCoverUrl(project.id)" class="cover">
+          <v-img aspect-ratio="1.7" :src="getCoverUrl(project.id)" class="cover">
             <v-expand-transition>
               <div
                 v-if="hover"
@@ -174,7 +174,7 @@ button[style].VueCarousel-dot {
 }
 
 .card {
-  min-height: 470px;
+  min-height: 450px;
 }
 
 .cover {

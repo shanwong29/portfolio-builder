@@ -11,9 +11,7 @@
 
       <h4>Interest</h4>
       <ul>
-        <li v-for="(interest, index) in dbAboutData.interests" :key="index">
-          {{ interest }}
-        </li>
+        <li v-for="(interest, index) in dbAboutData.interests" :key="index">{{ interest }}</li>
       </ul>
     </div>
   </div>
@@ -26,8 +24,8 @@ export default {
   name: "About",
   computed: {
     ...mapGetters(["profilePicUrl"]),
-    ...mapState(["dbAboutData"]),
-  },
+    ...mapState(["dbAboutData"])
+  }
 };
 </script>
 
@@ -48,6 +46,10 @@ export default {
 .profile-pic-wrapper {
   width: 100%;
   padding: 20px;
+}
+
+.basicInfo {
+  width: 100%;
 }
 
 @import "~vuetify/src/styles/settings/_variables";
