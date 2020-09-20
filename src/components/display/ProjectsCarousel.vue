@@ -4,15 +4,16 @@
     :scrollPerPage="true"
     :perPage="1"
     :perPageCustom="[
-      [600, 2],
-      [960, 3],
+      [$vuetify.breakpoint.thresholds.xs, 2],
+      [$vuetify.breakpoint.thresholds.sm, 3],
+      [1500, 4]
     ]"
     paginationColor="#839496"
     :paginationActiveColor="getActivePaginationColor"
   >
     <slide v-for="project in getStackFilteredShownProjects" :key="project.id" class="slide">
-      <v-hover v-slot:default="{ hover }" :style="{ width: getCardWidth + 'vw' }">
-        <v-card class="card">
+      <v-hover v-slot:default="{ hover }" class="card">
+        <v-card>
           <v-img aspect-ratio="1.7" :src="getCoverUrl(project.id)" class="cover">
             <v-expand-transition>
               <div
@@ -50,7 +51,7 @@
 
           <v-card-title class="py-2">{{ project.name }}</v-card-title>
 
-          <v-card-text class="pb-2 pt-0">
+          <v-card-text class="py-0">
             <div class="mb-2 subtitle-1">{{ project.language }}</div>
 
             <div
@@ -61,7 +62,7 @@
           </v-card-text>
 
           <v-card-text
-            class="pb-4 pt-0"
+            class="pb-8 pt-0"
             v-if="
               dbProjectsData[project.id] && dbProjectsData[project.id]['stacks']
             "
@@ -83,7 +84,6 @@
 import { mapGetters, mapState } from "vuex";
 import { Carousel, Slide } from "vue-carousel";
 var md = require("markdown-it")();
-// =     md = new MarkdownIt();
 var emoji = require("markdown-it-emoji");
 md.use(emoji);
 
@@ -100,16 +100,6 @@ export default {
   computed: {
     ...mapGetters(["filteredGithubData"]),
     ...mapState(["dbProjectsData"]),
-    getCardWidth() {
-      switch (this.$vuetify.breakpoint.name) {
-        case "xs":
-          return "90";
-        case "sm":
-          return "35";
-        default:
-          return "25";
-      }
-    },
     getActivePaginationColor() {
       const theme = this.$vuetify.theme.dark ? "dark" : "light";
       return this.$vuetify.theme.themes[theme].primary;
@@ -174,7 +164,7 @@ button[style].VueCarousel-dot {
 }
 
 .card {
-  min-height: 450px;
+  height: 100%;
 }
 
 .cover {
