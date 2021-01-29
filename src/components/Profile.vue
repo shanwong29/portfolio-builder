@@ -47,7 +47,7 @@ export default {
 
 @media #{map-get($display-breakpoints, 'sm-and-up')} {
   .section {
-    padding: 64px 12vw;
+    padding: 64px 15vw;
   }
 }
 </style>

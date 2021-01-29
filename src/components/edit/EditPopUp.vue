@@ -28,13 +28,12 @@
             <component :is="displayEditCmp"></component>
           </v-card-text>
 
-          <div style="flex: 1 1 auto;"></div>
+          <div style="flex: 1 1 auto"></div>
         </v-card>
       </v-dialog>
     </v-row>
   </div>
 </template>
-
 
 <script>
 import EditAbout from "./EditAbout";
@@ -47,11 +46,11 @@ export default {
   data() {
     return {
       tab: null,
-      displayEditCmp: "EditAbout"
+      displayEditCmp: "EditAbout",
     };
   },
   computed: {
-    ...mapState(["openEditPopUp"])
+    ...mapState(["openEditPopUp"]),
   },
   methods: {
     setDisplayEditCmp(targetCmp) {
@@ -59,16 +58,9 @@ export default {
     },
     toogleEditPopUp() {
       this.$store.commit({ type: "toogleEditPopUp" });
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-.pop-up {
-  width: 70vw;
-  height: 80vh;
-  position: fixed;
-  top: 15%;
-}
-</style>
+<style></style>

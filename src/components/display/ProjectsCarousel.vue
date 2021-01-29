@@ -6,7 +6,7 @@
     :perPageCustom="[
       [$vuetify.breakpoint.thresholds.xs, 2],
       [$vuetify.breakpoint.thresholds.sm, 3],
-      [1500, 4]
+      [$vuetify.breakpoint.thresholds.lg, 4]
     ]"
     paginationColor="#839496"
     :paginationActiveColor="getActivePaginationColor"
@@ -16,16 +16,9 @@
         <v-card>
           <v-img aspect-ratio="1.7" :src="getCoverUrl(project.id)" class="cover">
             <v-expand-transition>
-              <div
-                v-if="hover"
-                class="d-flex transition-fast-in-fast-out v-card--reveal"
-                style="height: 100%;"
-              >
+              <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 100%;">
                 <v-btn
-                  :class="[
-                    $vuetify.theme.dark ? 'black--text' : 'white--text',
-                    'mr-2',
-                  ]"
+                  :class="[$vuetify.theme.dark ? 'black--text' : 'white--text', 'mr-2']"
                   color="secondary"
                   rounded
                   :href="project.html_url"
@@ -54,19 +47,10 @@
           <v-card-text class="py-0">
             <div class="mb-2 subtitle-1">{{ project.language }}</div>
 
-            <div
-              class="body-2"
-              v-if="project.description"
-              v-html="renderMarkDown(project.description)"
-            ></div>
+            <div class="body-2" v-if="project.description" v-html="renderMarkDown(project.description)"></div>
           </v-card-text>
 
-          <v-card-text
-            class="pb-8 pt-0"
-            v-if="
-              dbProjectsData[project.id] && dbProjectsData[project.id]['stacks']
-            "
-          >
+          <v-card-text class="pb-8 pt-0" v-if="dbProjectsData[project.id] && dbProjectsData[project.id]['stacks']">
             <v-chip
               class="mr-1 mt-1"
               small
@@ -109,9 +93,7 @@ export default {
         return this.shownProjects;
       } else {
         return this.shownProjects.filter(el => {
-          return (
-            this.idListOfProjectsWithChosenStack.indexOf(el.id.toString()) >= 0
-          );
+          return this.idListOfProjectsWithChosenStack.indexOf(el.id.toString()) >= 0;
         });
       }
     }
@@ -119,10 +101,7 @@ export default {
 
   methods: {
     getCoverUrl(projectId) {
-      if (
-        this.dbProjectsData[projectId] &&
-        this.dbProjectsData[projectId]["coverUrl"]
-      ) {
+      if (this.dbProjectsData[projectId] && this.dbProjectsData[projectId]["coverUrl"]) {
         return this.dbProjectsData[projectId]["coverUrl"];
       }
       return `https://cdn.vuetifyjs.com/images/parallax/material.jpg`;
