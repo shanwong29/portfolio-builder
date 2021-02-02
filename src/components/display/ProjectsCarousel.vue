@@ -16,7 +16,7 @@
         <v-card>
           <v-img aspect-ratio="1.7" :src="getCoverUrl(project.id)" class="cover">
             <v-expand-transition>
-              <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 100%;">
+              <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 100%">
                 <v-btn
                   :class="[$vuetify.theme.dark ? 'black--text' : 'white--text', 'mr-2']"
                   color="secondary"
@@ -56,7 +56,8 @@
               small
               v-for="(stack, index) in dbProjectsData[project.id]['stacks']"
               :key="index"
-            >{{ stack }}</v-chip>
+              >{{ stack }}</v-chip
+            >
           </v-card-text>
         </v-card>
       </v-hover>

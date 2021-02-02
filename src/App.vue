@@ -24,9 +24,14 @@ export default {
     }
 
     // get data from github
-    const { data } = await axios.get(
-      `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}/repos?per_page=100&sort=created&direction=desc`
-    );
+    const githubRepoApi = `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}/repos`;
+    const { data } = await axios.get(githubRepoApi, {
+      params: {
+        per_page: 100,
+        sort: "created",
+        direction: "desc"
+      }
+    });
 
     this.$store.commit({ type: "setGithubData", data });
     try {
