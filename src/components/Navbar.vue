@@ -11,7 +11,7 @@
         <v-btn class="mx-1" href="/#projects" text icon color="primary">
           <v-icon>mdi-briefcase</v-icon>
         </v-btn>
-        <v-btn class="mx-1" href="/#contributions" text icon color="primary">
+        <v-btn v-if="dbAboutData.showContributions" class="mx-1" href="/#contributions" text icon color="primary">
           <v-icon>mdi-heart</v-icon>
         </v-btn>
         <v-btn class="mx-1" href="/#contact" text icon color="primary">
@@ -56,7 +56,7 @@
         <v-btn class="mx-1" href="/#projects" text small color="primary">
           <v-icon left>mdi-briefcase</v-icon>Projects
         </v-btn>
-        <v-btn class="mx-1" href="/#contributions" text small color="primary">
+        <v-btn v-if="dbAboutData.showContributions" class="mx-1" href="/#contributions" text small color="primary">
           <v-icon left>mdi-heart</v-icon>Contributions
         </v-btn>
         <v-btn class="mx-1" href="/#contact" text small color="primary">
@@ -137,7 +137,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(["isAdmin"]),
+    ...mapState(["isAdmin", "dbAboutData"]),
     isMainPage() {
       return this.$route.name === "mainPage";
     },

@@ -1,27 +1,13 @@
 <template>
   <v-form ref="form" v-model="valid">
-    <v-text-field
-      v-model="name"
-      :rules="nameRules"
-      label="Display Name"
-      required
-    ></v-text-field>
+    <v-text-field v-model="name" :rules="nameRules" label="Display Name" required></v-text-field>
 
     <v-text-field v-model="bio" label="One-line Bio"></v-text-field>
 
-    <v-textarea
-      name="input-7-1"
-      label="Self introduction"
-      :value="description"
-      @input="modifyDescription"
-    ></v-textarea>
+    <v-textarea name="input-7-1" label="Self introduction" :value="description" @input="modifyDescription"></v-textarea>
 
     <p class="subtitle-1 mb-2">Interests</p>
-    <div
-      v-for="(modifiedInterest, index) in modifiedInterests"
-      :key="index"
-      class="d-flex"
-    >
+    <div v-for="(modifiedInterest, index) in modifiedInterests" :key="index" class="d-flex">
       <v-text-field
         :style="{ width: '30%' }"
         :value="modifiedInterest"
@@ -34,12 +20,7 @@
         class="mb-2"
       ></v-text-field>
 
-      <v-btn
-        icon
-        @click.prevent="moveInterestUp(index)"
-        class="ml-1"
-        :disabled="index === 0"
-      >
+      <v-btn icon @click.prevent="moveInterestUp(index)" class="ml-1" :disabled="index === 0">
         <v-icon>mdi-arrow-up-bold-circle</v-icon>
       </v-btn>
 
@@ -58,21 +39,31 @@
     </div>
 
     <div class="input-wrapper">
-      <v-text-field
-        v-model="interestToBeAdded"
-        label="Add Interest"
-        v-on:keyup.enter="addInterest"
-      ></v-text-field>
+      <v-text-field v-model="interestToBeAdded" label="Add Interest" v-on:keyup.enter="addInterest"></v-text-field>
 
       <v-btn icon color="success" @click="addInterest" class="mx-2">
         <v-icon>mdi-plus-circle-outline</v-icon>
       </v-btn>
     </div>
+
+    <v-row>
+      <v-col md="4">
+        <v-switch v-model="showContributions" color="secondary">
+          <template v-slot:label>
+            Contribution Section:
+            <v-chip class="mx-2" label>
+              <v-icon left>
+                {{ showContributions ? "mdi-eye" : "mdi-eye-off" }}
+              </v-icon>
+              {{ showContributions ? "SHOW" : "HIDE" }}
+            </v-chip>
+          </template>
+        </v-switch>
+      </v-col>
+    </v-row>
+
     <div class="d-flex justify-end">
-      <v-btn
-        color="primary"
-        :class="[$vuetify.theme.dark ? 'black--text' : 'white--text', 'ma-2']"
-        @click="updateAbout"
+      <v-btn color="primary" :class="[$vuetify.theme.dark ? 'black--text' : 'white--text', 'ma-2']" @click="updateAbout"
         >Save Changes</v-btn
       >
     </div>
@@ -87,10 +78,10 @@ import Snackbar from "../Snackbar";
 export default {
   components: { Snackbar },
   data() {
-    const { name, bio, description, interests } = this.$store.state.dbAboutData;
+    const { name, bio, description, interests, showContributions } = this.$store.state.dbAboutData;
     return {
       valid: false,
-      nameRules: [(v) => !!v || "Display name is required"],
+      nameRules: [v => !!v || "Display name is required"],
       snackbar: false,
       snackbarMsg: "",
       hasErr: false,
@@ -99,6 +90,7 @@ export default {
       description: description || "",
       modifiedInterests: [...interests],
       interestToBeAdded: "",
+      showContributions
     };
   },
 
@@ -152,6 +144,7 @@ export default {
             bio: this.bio,
             description: this.description,
             interests: this.modifiedInterests,
+            showContributions: this.showContributions
           });
 
           this.snackbar = true;
@@ -164,8 +157,8 @@ export default {
         this.hasErr = true;
         this.snackbarMsg = "Something goes wrong! Cannot update About.";
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

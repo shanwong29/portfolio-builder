@@ -9,10 +9,10 @@
       <Projects />
     </div>
     <v-divider v-if="$vuetify.theme.dark" />
-    <div id="contributions" class="section">
+    <div v-if="dbAboutData.showContributions" id="contributions" class="section">
       <Contributions />
     </div>
-    <v-divider v-if="$vuetify.theme.dark" />
+    <v-divider v-if="$vuetify.theme.dark && dbAboutData.showContributions" />
     <div id="contact" class="section">
       <Contact />
     </div>
@@ -30,7 +30,7 @@ import { mapState } from "vuex";
 export default {
   components: { About, Projects, Contributions, Contact, EditPopUp },
   computed: {
-    ...mapState(["isAdmin"])
+    ...mapState(["isAdmin", "dbAboutData"])
   }
 };
 </script>
