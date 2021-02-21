@@ -1,20 +1,11 @@
 <template>
   <div class="d-flex justify-center align-center mt-4 mt-sm-8 mb-4">
-    <v-sheet :style="{ maxWidth: getPanelWidth + '%' }" color="projectsBkg">
+    <v-sheet :style="{ maxWidth: getPanelWidth + '%' }" color="background darken-1">
       <v-slide-group v-model="model" center-active show-arrows>
-        <v-slide-item
-          v-for="(stack, index) in getUsedTechStacks"
-          :key="index"
-          v-slot:default="{ active }"
-        >
+        <v-slide-item v-for="(stack, index) in getUsedTechStacks" :key="index" v-slot:default="{ active }">
           <v-btn
             :color="active ? 'primary' : 'light'"
-            :class="[
-              $vuetify.theme.dark || (!$vuetify.theme.dark && !active)
-                ? 'black--text'
-                : 'white--text',
-              'ma-1',
-            ]"
+            :class="[$vuetify.theme.dark || (!$vuetify.theme.dark && !active) ? 'black--text' : 'white--text', 'ma-1']"
             rounded
             small
             @click="setChosenStack(index, stack)"
@@ -37,7 +28,7 @@ export default {
   data() {
     return {
       chosenStack: "",
-      model: null,
+      model: null
     };
   },
   computed: {
@@ -45,13 +36,8 @@ export default {
     getUsedTechStacks() {
       let allTechStacks = [];
       for (const project in this.dbProjectsData) {
-        if (
-          this.dbProjectsData[project]["stacks"] &&
-          this.dbProjectsData[project]["show"]
-        ) {
-          allTechStacks = allTechStacks.concat(
-            this.dbProjectsData[project]["stacks"]
-          );
+        if (this.dbProjectsData[project]["stacks"] && this.dbProjectsData[project]["show"]) {
+          allTechStacks = allTechStacks.concat(this.dbProjectsData[project]["stacks"]);
         }
       }
 
@@ -67,7 +53,7 @@ export default {
         default:
           return "70";
       }
-    },
+    }
   },
 
   methods: {
@@ -80,8 +66,8 @@ export default {
       this.$emit("chosenTechStackChanged", stack);
       this.model = index;
       this.chosenStack = stack;
-    },
-  },
+    }
+  }
 };
 </script>
 

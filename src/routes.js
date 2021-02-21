@@ -23,7 +23,7 @@ export const routes = [
       }
 
       next();
-    },
+    }
   },
-  { path: "*", redirect: "/" },
+  { path: "*", redirect: "/" }
 ];

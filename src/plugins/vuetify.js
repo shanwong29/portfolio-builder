@@ -8,8 +8,7 @@ const vuetify = new Vuetify({
   theme: {
     themes: {
       light: {
-        background: "#f5f5f5",
-        projectsBkg: "#becccf",
+        background: { base: "#e4e1e1", darken1: "#becccf", lighten1: "#f5f5f5" },
         text: "#2f5260",
         navbar: "fff",
         primary: "#44909d", //main buttons
@@ -17,43 +16,23 @@ const vuetify = new Vuetify({
         success: "#c474c2", // add buttons in edit panel
         light: colors.blueGrey.lighten5,
         dark: colors.grey.darken3,
-        editBtn: "#ef9c88",
+        editBtn: "#ef9c88"
       },
       dark: {
-        background: "#272727",
-        projectsBkg: "#272727",
+        background: { base: "#272727", darken1: "#272727", lighten1: "#272727" },
         text: "#e5e6ea",
         primary: "#b886f7",
         secondary: "#1dddca",
         success: "#1dddca",
         light: colors.blueGrey.lighten5,
         dark: colors.grey.darken3,
-        editBtn: "#1dddca",
-      },
+        editBtn: "#1dddca"
+      }
     },
     options: {
-      customProperties: true,
-    },
-  },
+      customProperties: true
+    }
+  }
 });
 
 export default vuetify;
-
-// export default new Vuetify({
-//   theme: {
-//     primary: "fff",
-//     // light: {
-//     //   // primary: '#3f51b5',
-//     //   // secondary: '#b0bec5',
-//     //   // accent: '#8c9eff',
-//     //   // error: '#b71c1c',
-//     //   primary: "red",
-//     //   secondary: '#b0bec5',
-//     //   accent: '#8c-9eff',
-//     //   error: '#b71c1c',;
-//     // },
-//     // dark: {
-//     //   primary: "#b0bec5",
-//     // },
-//   }
-// });

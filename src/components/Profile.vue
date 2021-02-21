@@ -4,11 +4,15 @@
     <div id="about" class="section">
       <About />
     </div>
-    <v-divider></v-divider>
+    <v-divider v-if="$vuetify.theme.dark" />
     <div id="projects" class="section">
       <Projects />
     </div>
-    <v-divider></v-divider>
+    <v-divider v-if="$vuetify.theme.dark" />
+    <div id="contributions" class="section">
+      <Contributions />
+    </div>
+    <v-divider v-if="$vuetify.theme.dark" />
     <div id="contact" class="section">
       <Contact />
     </div>
@@ -18,12 +22,13 @@
 <script>
 import About from "./display/About";
 import Projects from "./display/Projects";
+import Contributions from "./display/Contributions";
 import Contact from "./display/Contact";
 import EditPopUp from "./edit/EditPopUp";
 import { mapState } from "vuex";
 
 export default {
-  components: { About, Projects, Contact, EditPopUp },
+  components: { About, Projects, Contributions, Contact, EditPopUp },
   computed: {
     ...mapState(["isAdmin"])
   }
@@ -34,11 +39,15 @@ export default {
 @import "~vuetify/src/styles/settings/_variables";
 
 #projects {
-  background-color: var(--v-projectsBkg-base);
+  background-color: var(--v-background-darken1);
+}
+
+#contributions {
+  background-color: var(--v-background-base);
 }
 
 .theme--light.v-divider {
-  border-color: var(--v-projectsBkg-base) !important;
+  border-color: var(--v-background-base) !important;
 }
 
 .section {

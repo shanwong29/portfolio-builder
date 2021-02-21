@@ -23,18 +23,18 @@ export default {
       this.$vuetify.theme.dark = false;
     }
 
-    // get data from github
-    const githubRepoApi = `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}/repos`;
-    const { data } = await axios.get(githubRepoApi, {
-      params: {
-        per_page: 100,
-        sort: "created",
-        direction: "desc"
-      }
-    });
-
-    this.$store.commit({ type: "setGithubData", data });
     try {
+      // get data from github
+      const githubRepoApi = `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}/repos`;
+      const { data } = await axios.get(githubRepoApi, {
+        params: {
+          per_page: 100,
+          sort: "created",
+          direction: "desc"
+        }
+      });
+
+      this.$store.commit({ type: "setGithubData", data });
       //check if this user is a admin when page is loaded and everytime when there is auth changes
       auth.onAuthStateChanged(async user => {
         if (user) {
@@ -59,7 +59,7 @@ export default {
 </script>
 <style>
 #app {
-  background-color: var(--v-background-base);
+  background-color: var(--v-background-lighten1);
   color: var(--v-text-base);
 }
 

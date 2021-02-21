@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Projects</h1>
+    <h1>Personal Projects</h1>
     <projects-filter @chosenTechStackChanged="getStackFilteredProjectsId($event)" />
     <projects-carousel
       :shownProjects="getShownProjects"

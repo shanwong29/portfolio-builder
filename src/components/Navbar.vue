@@ -6,10 +6,13 @@
       </v-btn>
       <div v-else>
         <v-btn class="mr-1" href="/#about" text icon color="primary">
-          <v-icon>mdi-heart</v-icon>
+          <v-icon>mdi-face-woman</v-icon>
         </v-btn>
         <v-btn class="mx-1" href="/#projects" text icon color="primary">
           <v-icon>mdi-briefcase</v-icon>
+        </v-btn>
+        <v-btn class="mx-1" href="/#contributions" text icon color="primary">
+          <v-icon>mdi-heart</v-icon>
         </v-btn>
         <v-btn class="mx-1" href="/#contact" text icon color="primary">
           <v-icon>mdi-phone-classic</v-icon>
@@ -34,11 +37,7 @@
         </template>
 
         <v-list>
-          <v-list-item
-            v-for="(item, i) in hamburgerLists"
-            :key="i"
-            @click="item.onClickEvent"
-          >
+          <v-list-item v-for="(item, i) in hamburgerLists" :key="i" @click="item.onClickEvent">
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -52,10 +51,13 @@
 
       <div v-else>
         <v-btn class="mx-1" href="/#about" text small color="primary">
-          <v-icon left>mdi-heart</v-icon>About
+          <v-icon left>mdi-face-woman</v-icon>About
         </v-btn>
         <v-btn class="mx-1" href="/#projects" text small color="primary">
           <v-icon left>mdi-briefcase</v-icon>Projects
+        </v-btn>
+        <v-btn class="mx-1" href="/#contributions" text small color="primary">
+          <v-icon left>mdi-heart</v-icon>Contributions
         </v-btn>
         <v-btn class="mx-1" href="/#contact" text small color="primary">
           <v-icon left>mdi-phone-classic</v-icon>Contact
@@ -116,8 +118,8 @@ export default {
     return {
       hamburgerLists: [
         { title: "Edit", onClickEvent: this.toogleEditPopUp },
-        { title: "Logout", onClickEvent: this.logout },
-      ],
+        { title: "Logout", onClickEvent: this.logout }
+      ]
     };
   },
   methods: {
@@ -132,7 +134,7 @@ export default {
     },
     toogleEditPopUp() {
       this.$store.commit({ type: "toogleEditPopUp" });
-    },
+    }
   },
   computed: {
     ...mapState(["isAdmin"]),
@@ -141,8 +143,8 @@ export default {
     },
     isPhone() {
       return this.$vuetify.breakpoint.xs;
-    },
-  },
+    }
+  }
 };
 </script>
 

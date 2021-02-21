@@ -45,7 +45,16 @@
           <v-card-title class="py-2">{{ project.name }}</v-card-title>
 
           <v-card-text class="py-0">
-            <div class="mb-2 subtitle-1">{{ project.language }}</div>
+            <div class="mb-2 subtitle-1">
+              <v-badge
+                class="mr-1"
+                v-if="colorMap[project.language]"
+                inline
+                left
+                dot
+                :color="colorMap[project.language]['color']"
+              />{{ project.language }}
+            </div>
 
             <div class="body-2" v-if="project.description" v-html="renderMarkDown(project.description)"></div>
           </v-card-text>
@@ -68,6 +77,7 @@
 <script>
 import { mapGetters, mapState } from "vuex";
 import { Carousel, Slide } from "vue-carousel";
+import axios from "axios";
 var md = require("markdown-it")();
 var emoji = require("markdown-it-emoji");
 md.use(emoji);
@@ -81,6 +91,16 @@ export default {
   props: {
     idListOfProjectsWithChosenStack: { type: Array, required: true },
     shownProjects: { type: Array, required: true }
+  },
+  data() {
+    return {
+      colorMap: null
+    };
+  },
+  async created() {
+    const githubLangColorRef = "https://raw.githubusercontent.com/ozh/github-colors/master/colors.json";
+    const { data } = await axios.get(githubLangColorRef);
+    this.colorMap = data;
   },
   computed: {
     ...mapGetters(["filteredGithubData"]),
