@@ -18,6 +18,10 @@ This project was created with Vue, Firebase and Vuetify.
    - [`Firebase CLI`](https://firebase.google.com/docs/cli)
    - [`Vue CLI`](https://cli.vuejs.org/)
 
+2. Open Source Contributions is an optional section in the portfolio page. If you want to enable this section, a [`Github personal access token`](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token) is required in order to use Github API v4 to retrieve data of your contributed repos.
+
+   A personal access token for **public access** is enough for the use here, i.e. No need to select any scope/permission when generating the token.
+
 ## Get Started
 
 ### Installation and env setting:
@@ -107,12 +111,23 @@ This project was created with Vue, Firebase and Vuetify.
    In the Firebase console, open the `Authentication` section.
    On the `Sign-in method` tab, enable the Email/password sign-in method and click Save.
 
-8) The logic of creating the admin user is achieved with Firebase Functions, you can find the code in `/functions/index.js`. The access of the Firestore and Storage is controlled by Firebase security rules, in this project, the rules are set to only admin users can write. You can find the related rules in `/security-rules`.
+8) The logic of creating the admin user is achieved with Firebase Functions, you can find the code in `/functions/add-admin-role.js`. The access of the Firestore and Storage is controlled by Firebase security rules, in this project, the rules are set to only admin users can write. You can find the related rules in `/security-rules`.
 
    Run the following command to deploy the mentioned function and security rules:
 
    ```
-   firebase deploy --only storage,firestore,functions
+   firebase deploy --only functions:addAdminRole
+   firebase deploy --only storage,firestore
+   ```
+
+9. The code in `/functions/get-contribution.js` is for retrieving data of your contributed repos (See also [Prerequisites](./README.md/#Prerequisites)).
+
+   If you want to enable the **Contributions section** to display your contributed repos, run the following command to set the your `Github personal access token` as a environment config variable in firebase and deploy the getContribution function:
+
+   ```
+   firebase functions:config:set github.token=<Your Github Token>
+
+   firebase deploy --only functions:getContribution
    ```
 
 ### Start the portfolio app
@@ -125,7 +140,7 @@ This project was created with Vue, Firebase and Vuetify.
 
    You may view it in the browser on http://localhost:8080.
 
-2. Go to the [initialize page](http://localhost:8080/initial). Fill in the form to set your email account as the admin user. Once this step is done, an `about` collection will be created in your Firestore. As long as there is an `about` collection in Firestore, no other person will be set as an admin user. The login page is on the path [`/admin`](http://localhost:8080/admin)
+2) Go to the [initialize page](http://localhost:8080/initial). Fill in the form to set your email account as the admin user. Once this step is done, an `about` collection will be created in your Firestore. As long as there is an `about` collection in Firestore, no other person will be set as an admin user. The login page is on the path [`/admin`](http://localhost:8080/admin)
 
 3. You can change the major color setting in `/src/plugins/vuetify.js`
 
@@ -149,6 +164,6 @@ This project was created with Vue, Firebase and Vuetify.
 
 - Firebase
 - Github Action
-- GitHub API v3
+- GitHub API v3 and v4
 - Vue.js
 - Vuetify
