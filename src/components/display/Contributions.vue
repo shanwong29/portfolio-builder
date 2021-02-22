@@ -107,4 +107,8 @@ button[style].VueCarousel-dot {
 .link-contributed-repo {
   text-decoration: none;
 }
+
+.link-contributed-repo:hover {
+  text-decoration: underline;
+}
 </style>
