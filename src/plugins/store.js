@@ -11,20 +11,18 @@ export const store = new Vuex.Store({
     dbProjectsData: {},
     dbContactData: {},
     isAdmin: false,
-    openEditPopUp: false,
+    openEditPopUp: false
   },
   getters: {
-    filteredGithubData: (state) => {
-      return state.githubData.filter((el) => el.fork === false);
+    filteredGithubData: state => {
+      return state.githubData.filter(el => el.fork === false);
     },
-    profilePicUrl: (state) => {
-      return state.githubData.length
-        ? state.githubData[state.githubData.length - 1].owner.avatar_url
-        : "";
+    profilePicUrl: state => {
+      return state.githubData.length ? state.githubData[state.githubData.length - 1].owner.avatar_url : "";
     },
-    linkedinUrl: (state) => {
+    linkedinUrl: state => {
       return state.dbContactData.linkedin;
-    },
+    }
   },
 
   mutations: {
@@ -34,7 +32,7 @@ export const store = new Vuex.Store({
     setIsAdmin: (state, payload) => {
       state.isAdmin = payload.isAdmin;
     },
-    toogleEditPopUp: (state) => {
+    toogleEditPopUp: state => {
       state.openEditPopUp = !state.openEditPopUp;
     },
     setDbProjectsData: (state, payload) => {
@@ -45,20 +43,20 @@ export const store = new Vuex.Store({
     },
     setContactData: (state, payload) => {
       state.dbContactData = payload.data;
-    },
+    }
   },
 
   actions: {
     getDbProjects(context) {
       const projectsData = {};
-      db.collection("projects").onSnapshot((snapshot) => {
-        snapshot.forEach((doc) => {
+      db.collection("projects").onSnapshot(snapshot => {
+        snapshot.forEach(doc => {
           projectsData[doc.id] = doc.data();
         });
 
         context.commit({
           type: "setDbProjectsData",
-          data: { ...projectsData },
+          data: { ...projectsData }
         });
       });
     },
@@ -66,24 +64,24 @@ export const store = new Vuex.Store({
     getDbAbout(context) {
       db.collection("personalInfo")
         .doc("about")
-        .onSnapshot((doc) => {
+        .onSnapshot(doc => {
           context.commit({
             type: "setDbAboutData",
-            data: { ...doc.data() },
+            data: { ...doc.data() }
           });
         });
     },
     getDbContact(context) {
       db.collection("personalInfo")
         .doc("contact")
-        .onSnapshot((doc) => {
+        .onSnapshot(doc => {
           if (doc.exists) {
             context.commit({
               type: "setContactData",
-              data: doc.data(),
+              data: doc.data()
             });
           }
         });
-    },
-  },
+    }
+  }
 });

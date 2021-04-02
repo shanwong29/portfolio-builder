@@ -1,6 +1,9 @@
 <template>
   <div class="d-flex justify-center align-center mt-4 mt-sm-8 mb-4">
-    <v-sheet :style="{ maxWidth: getPanelWidth + '%' }" color="background darken-1">
+    <div :style="{ maxWidth: getPanelWidth + '%' }" v-if="getUsedTechStacks.length === 0">
+      <v-skeleton-loader v-bind="{ width: getLoaderWidth }" type="heading"></v-skeleton-loader>
+    </div>
+    <v-sheet v-else :style="{ maxWidth: getPanelWidth + '%' }" color="background darken-1">
       <v-slide-group v-model="model" center-active show-arrows>
         <v-slide-item v-for="(stack, index) in getUsedTechStacks" :key="index" v-slot:default="{ active }">
           <v-btn
@@ -53,6 +56,10 @@ export default {
         default:
           return "70";
       }
+    },
+    getLoaderWidth() {
+      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+      return vw * (this.getPanelWidth / 100);
     }
   },
 
@@ -71,4 +78,3 @@ export default {
 };
 </script>
 
-<style></style>

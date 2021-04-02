@@ -45,23 +45,15 @@
     </template>
 
     <template v-else>
-      <v-btn class="mx-1" to="/" text small color="primary" v-if="!isMainPage">
-        <v-icon left>mdi-home</v-icon>Home
-      </v-btn>
+      <v-btn to="/" text small color="primary" v-if="!isMainPage"> <v-icon left>mdi-home</v-icon>Home </v-btn>
 
       <div v-else>
-        <v-btn class="mx-1" href="/#about" text small color="primary">
-          <v-icon left>mdi-face-woman</v-icon>About
-        </v-btn>
-        <v-btn class="mx-1" href="/#projects" text small color="primary">
-          <v-icon left>mdi-briefcase</v-icon>Projects
-        </v-btn>
-        <v-btn v-if="dbAboutData.showContributions" class="mx-1" href="/#contributions" text small color="primary">
+        <v-btn href="/#about" text small color="primary"> <v-icon left>mdi-face-woman</v-icon>About </v-btn>
+        <v-btn href="/#projects" text small color="primary"> <v-icon left>mdi-briefcase</v-icon>Projects </v-btn>
+        <v-btn v-if="dbAboutData.showContributions" href="/#contributions" text small color="primary">
           <v-icon left>mdi-heart</v-icon>Contributions
         </v-btn>
-        <v-btn class="mx-1" href="/#contact" text small color="primary">
-          <v-icon left>mdi-phone-classic</v-icon>Contact
-        </v-btn>
+        <v-btn href="/#contact" text small color="primary"> <v-icon left>mdi-phone-classic</v-icon>Contact </v-btn>
       </div>
 
       <v-spacer></v-spacer>

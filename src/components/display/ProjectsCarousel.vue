@@ -11,66 +11,73 @@
     paginationColor="#839496"
     :paginationActiveColor="getActivePaginationColor"
   >
-    <slide v-for="project in getStackFilteredShownProjects" :key="project.id" class="slide">
-      <v-hover v-slot:default="{ hover }" class="card">
-        <v-card>
-          <v-img aspect-ratio="1.7" :src="getCoverUrl(project.id)" class="cover">
-            <v-expand-transition>
-              <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 100%">
-                <v-btn
-                  :class="[$vuetify.theme.dark ? 'black--text' : 'white--text', 'mr-2']"
-                  color="secondary"
-                  rounded
-                  :href="project.html_url"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <v-icon left>mdi-github</v-icon>Code
-                </v-btn>
-                <v-btn
-                  :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
-                  color="secondary"
-                  rounded
-                  :disabled="project.homepage ? false : true"
-                  :href="project.homepage"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <v-icon left>mdi-earth</v-icon>Live
-                </v-btn>
+    <template v-if="getIsLoading">
+      <slide v-for="loader in getLoaderNum" :key="loader" class="slide">
+        <v-skeleton-loader v-bind="{ elevation: 2 }" type="image, article, table-tfoot"></v-skeleton-loader>
+      </slide>
+    </template>
+    <template v-else>
+      <slide v-for="project in getStackFilteredShownProjects" :key="project.id" class="slide">
+        <v-hover v-slot:default="{ hover }" class="card">
+          <v-card>
+            <v-img aspect-ratio="1.7" :src="getCoverUrl(project.id)" class="cover">
+              <v-expand-transition>
+                <div v-if="hover" class="d-flex transition-fast-in-fast-out v-card--reveal" style="height: 100%">
+                  <v-btn
+                    :class="[$vuetify.theme.dark ? 'black--text' : 'white--text', 'mr-2']"
+                    color="secondary"
+                    rounded
+                    :href="project.html_url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <v-icon left>mdi-github</v-icon>Code
+                  </v-btn>
+                  <v-btn
+                    :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
+                    color="secondary"
+                    rounded
+                    :disabled="project.homepage ? false : true"
+                    :href="project.homepage"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <v-icon left>mdi-earth</v-icon>Live
+                  </v-btn>
+                </div>
+              </v-expand-transition>
+            </v-img>
+
+            <v-card-title class="py-2">{{ project.name }}</v-card-title>
+
+            <v-card-text class="py-0">
+              <div class="mb-2 subtitle-1">
+                <v-badge
+                  class="mr-1"
+                  v-if="colorMap[project.language]"
+                  inline
+                  left
+                  dot
+                  :color="colorMap[project.language]['color']"
+                />{{ project.language }}
               </div>
-            </v-expand-transition>
-          </v-img>
 
-          <v-card-title class="py-2">{{ project.name }}</v-card-title>
+              <div class="body-2" v-if="project.description" v-html="renderMarkDown(project.description)"></div>
+            </v-card-text>
 
-          <v-card-text class="py-0">
-            <div class="mb-2 subtitle-1">
-              <v-badge
-                class="mr-1"
-                v-if="colorMap[project.language]"
-                inline
-                left
-                dot
-                :color="colorMap[project.language]['color']"
-              />{{ project.language }}
-            </div>
-
-            <div class="body-2" v-if="project.description" v-html="renderMarkDown(project.description)"></div>
-          </v-card-text>
-
-          <v-card-text class="pb-8 pt-0" v-if="dbProjectsData[project.id] && dbProjectsData[project.id]['stacks']">
-            <v-chip
-              class="mr-1 mt-1"
-              small
-              v-for="(stack, index) in dbProjectsData[project.id]['stacks']"
-              :key="index"
-              >{{ stack }}</v-chip
-            >
-          </v-card-text>
-        </v-card>
-      </v-hover>
-    </slide>
+            <v-card-text class="pb-8 pt-0" v-if="dbProjectsData[project.id] && dbProjectsData[project.id]['stacks']">
+              <v-chip
+                class="mr-1 mt-1"
+                small
+                v-for="(stack, index) in dbProjectsData[project.id]['stacks']"
+                :key="index"
+                >{{ stack }}</v-chip
+              >
+            </v-card-text>
+          </v-card>
+        </v-hover>
+      </slide>
+    </template>
   </carousel>
 </template>
 
@@ -116,6 +123,20 @@ export default {
         return this.shownProjects.filter(el => {
           return this.idListOfProjectsWithChosenStack.indexOf(el.id.toString()) >= 0;
         });
+      }
+    },
+    getIsLoading() {
+      return Object.keys(this.dbProjectsData).length === 0 || this.filteredGithubData.length === 0;
+    },
+    getLoaderNum() {
+      if (this.$vuetify.breakpoint.xs) {
+        return 1;
+      } else if (this.$vuetify.breakpoint.smAndDown) {
+        return 2;
+      } else if (this.$vuetify.breakpoint.lgAndDown) {
+        return 3;
+      } else {
+        return 4;
       }
     }
   },

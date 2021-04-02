@@ -13,26 +13,33 @@
       paginationColor="#839496"
       :paginationActiveColor="getActivePaginationColor"
     >
-      <slide v-for="(contributedRepo, index) in contributedRepos" :key="index" class="slide">
-        <v-card class="card py-1">
-          <a class="link-contributed-repo" :href="contributedRepo.url" target="_blank" rel="noopener noreferrer"
-            ><v-card-title class="py-2">{{ contributedRepo.nameWithOwner }}</v-card-title></a
-          >
+      <template v-if="isLoading">
+        <slide v-for="loader in getLoaderNum" :key="loader" class="slide">
+          <v-skeleton-loader v-bind="{ elevation: 2 }" type="article"></v-skeleton-loader>
+        </slide>
+      </template>
+      <template v-else>
+        <slide v-for="(contributedRepo, index) in contributedRepos" :key="index" class="slide">
+          <v-card class="card py-1">
+            <a class="link-contributed-repo" :href="contributedRepo.url" target="_blank" rel="noopener noreferrer"
+              ><v-card-title class="py-2">{{ contributedRepo.nameWithOwner }}</v-card-title></a
+            >
 
-          <v-card-text class="py-0">
-            <div v-for="(language, index) in contributedRepo.languages.nodes" :key="index">
-              <div class="mb-2 subtitle-1">
-                <v-badge class="mr-1" inline left dot :color="language.color" />{{ language.name }}
+            <v-card-text class="py-0">
+              <div v-for="(language, index) in contributedRepo.languages.nodes" :key="index">
+                <div class="mb-2 subtitle-1">
+                  <v-badge class="mr-1" inline left dot :color="language.color" />{{ language.name }}
+                </div>
               </div>
-            </div>
-            <div
-              class="body-2"
-              v-if="contributedRepo.description"
-              v-html="renderMarkDown(contributedRepo.description)"
-            ></div>
-          </v-card-text>
-        </v-card>
-      </slide>
+              <div
+                class="body-2"
+                v-if="contributedRepo.description"
+                v-html="renderMarkDown(contributedRepo.description)"
+              ></div>
+            </v-card-text>
+          </v-card>
+        </slide>
+      </template>
     </carousel>
   </div>
 </template>
@@ -52,24 +59,41 @@ export default {
   },
   data() {
     return {
-      contributedRepos: []
+      contributedRepos: [],
+      isLoading: true
     };
   },
   async created() {
     const getContribution = functions.httpsCallable("getContribution");
+    try {
+      const { data } = await getContribution({
+        loginName: `${process.env.VUE_APP_GITHUB_USERNAME}`
+      });
 
-    const { data } = await getContribution({
-      loginName: `${process.env.VUE_APP_GITHUB_USERNAME}`
-    });
-
-    if (data.user) {
-      this.contributedRepos = data.user.repositoriesContributedTo.nodes;
+      if (data.user) {
+        this.contributedRepos = data.user.repositoriesContributedTo.nodes;
+      }
+    } catch (err) {
+      console.log(err);
     }
+
+    this.isLoading = false;
   },
   computed: {
     getActivePaginationColor() {
       const theme = this.$vuetify.theme.dark ? "dark" : "light";
       return this.$vuetify.theme.themes[theme].primary;
+    },
+    getLoaderNum() {
+      if (this.$vuetify.breakpoint.xs) {
+        return 1;
+      } else if (this.$vuetify.breakpoint.smAndDown) {
+        return 2;
+      } else if (this.$vuetify.breakpoint.lgAndDown) {
+        return 3;
+      } else {
+        return 4;
+      }
     }
   },
   methods: {

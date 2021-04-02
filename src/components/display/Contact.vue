@@ -8,20 +8,24 @@
         fab
         dark
         large
-        color="black"
         :href="`https://github.com/shanwong29`"
         target="_blank"
         rel="noopener noreferrer"
+        :style="{ background: 'linear-gradient(45deg, #000000, #353535, #000000 )' }"
       >
         <v-icon dark>mdi-github</v-icon>
       </v-btn>
 
       <v-btn
+        :style="
+          $vuetify.theme.dark
+            ? { background: 'linear-gradient(45deg, #5b86e5, #36d1dc, #5b86e5)' }
+            : { background: 'linear-gradient(45deg, #64a1fe, #8bfcfe)' }
+        "
         class="mx-2"
         fab
         dark
         large
-        color="blue"
         :href="linkedinUrl"
         target="_blank"
         rel="noopener noreferrer"
