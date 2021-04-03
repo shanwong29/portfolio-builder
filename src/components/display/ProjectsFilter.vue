@@ -1,6 +1,6 @@
 <template>
   <div class="d-flex justify-center align-center mt-4 mt-sm-8 mb-4">
-    <div :style="{ maxWidth: getPanelWidth + '%' }" v-if="getUsedTechStacks.length === 0">
+    <div :style="{ maxWidth: getPanelWidth + '%' }" v-if="getAreProjectsLoading">
       <v-skeleton-loader v-bind="{ width: getLoaderWidth }" type="heading"></v-skeleton-loader>
     </div>
     <v-sheet v-else :style="{ maxWidth: getPanelWidth + '%' }" color="background darken-1">
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   name: "Projects",
@@ -35,7 +35,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["dbProjectsData"]),
+    ...mapGetters(["getAreProjectsLoading"]),
+    ...mapState(["dbProjectsData", "loadingDbProjectData", "loadingGithubData"]),
     getUsedTechStacks() {
       let allTechStacks = [];
       for (const project in this.dbProjectsData) {

@@ -4,7 +4,11 @@ import Initial from "./components/Initial";
 import { db } from "./firebase-config/init";
 
 export const routes = [
-  { path: "/", name: "mainPage", component: Profile },
+  {
+    path: "/",
+    name: "mainPage",
+    component: Profile
+  },
   { path: "/admin", name: "admin", component: Admin },
   {
     path: "/initial",
@@ -16,10 +20,12 @@ export const routes = [
         const doc = await docRef.get();
         if (doc.exists) {
           next({ name: "mainPage" });
+          return;
         }
       } catch (err) {
         console.log(err);
         next({ name: "mainPage" });
+        return;
       }
 
       next();

@@ -11,7 +11,7 @@
     paginationColor="#839496"
     :paginationActiveColor="getActivePaginationColor"
   >
-    <template v-if="getIsLoading">
+    <template v-if="getAreProjectsLoading">
       <slide v-for="loader in getLoaderNum" :key="loader" class="slide">
         <v-skeleton-loader v-bind="{ elevation: 2 }" type="image, article, table-tfoot"></v-skeleton-loader>
       </slide>
@@ -110,7 +110,7 @@ export default {
     this.colorMap = data;
   },
   computed: {
-    ...mapGetters(["filteredGithubData"]),
+    ...mapGetters(["filteredGithubData", "getAreProjectsLoading"]),
     ...mapState(["dbProjectsData"]),
     getActivePaginationColor() {
       const theme = this.$vuetify.theme.dark ? "dark" : "light";
@@ -124,9 +124,6 @@ export default {
           return this.idListOfProjectsWithChosenStack.indexOf(el.id.toString()) >= 0;
         });
       }
-    },
-    getIsLoading() {
-      return Object.keys(this.dbProjectsData).length === 0 || this.filteredGithubData.length === 0;
     },
     getLoaderNum() {
       if (this.$vuetify.breakpoint.xs) {

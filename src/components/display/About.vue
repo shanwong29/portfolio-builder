@@ -6,7 +6,7 @@
     </div>
 
     <div class="basicInfo">
-      <template v-if="!dbAboutData.name">
+      <template v-if="loadingDbAbout">
         <v-skeleton-loader class="mb-7" type="heading"></v-skeleton-loader>
         <v-skeleton-loader class="mb-5" type="sentences"></v-skeleton-loader>
         <v-skeleton-loader type="paragraph"></v-skeleton-loader>
@@ -33,7 +33,7 @@ export default {
   name: "About",
   computed: {
     ...mapGetters(["profilePicUrl"]),
-    ...mapState(["dbAboutData"])
+    ...mapState(["dbAboutData", "loadingDbAbout"])
   }
 };
 </script>

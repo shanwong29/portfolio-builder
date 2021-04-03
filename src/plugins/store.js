@@ -11,7 +11,10 @@ export const store = new Vuex.Store({
     dbProjectsData: {},
     dbContactData: {},
     isAdmin: false,
-    openEditPopUp: false
+    openEditPopUp: false,
+    loadingDbProjectData: true,
+    loadingGithubData: true,
+    loadingDbAbout: true
   },
   getters: {
     filteredGithubData: state => {
@@ -22,12 +25,16 @@ export const store = new Vuex.Store({
     },
     linkedinUrl: state => {
       return state.dbContactData.linkedin;
+    },
+    getAreProjectsLoading: state => {
+      return state.loadingDbProjectData || state.loadingGithubData;
     }
   },
 
   mutations: {
     setGithubData: (state, payload) => {
       state.githubData = payload.data;
+      state.loadingGithubData = false;
     },
     setIsAdmin: (state, payload) => {
       state.isAdmin = payload.isAdmin;
@@ -37,9 +44,11 @@ export const store = new Vuex.Store({
     },
     setDbProjectsData: (state, payload) => {
       state.dbProjectsData = payload.data;
+      state.loadingDbProjectData = false;
     },
     setDbAboutData: (state, payload) => {
       state.dbAboutData = payload.data;
+      state.loadingDbAbout = false;
     },
     setContactData: (state, payload) => {
       state.dbContactData = payload.data;
