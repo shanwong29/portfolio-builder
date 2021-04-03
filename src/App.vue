@@ -39,6 +39,9 @@ export default {
       auth.onAuthStateChanged(async user => {
         if (user) {
           console.log("login user:", user);
+          if (this.$route.name === "admin") {
+            this.$router.push({ name: "mainPage" });
+          }
           const idTokenResult = await user.getIdTokenResult();
           if (idTokenResult.claims.admin) {
             this.$store.commit({ type: "setIsAdmin", isAdmin: true });

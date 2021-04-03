@@ -54,7 +54,7 @@
               <div class="mb-2 subtitle-1">
                 <v-badge
                   class="mr-1"
-                  v-if="colorMap[project.language]"
+                  v-if="colorMap && colorMap[project.language]"
                   inline
                   left
                   dot

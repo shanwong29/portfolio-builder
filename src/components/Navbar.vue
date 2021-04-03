@@ -1,9 +1,26 @@
 <template>
   <v-app-bar color="navbar" hide-on-scroll fixed width="100%">
     <template v-if="isPhone">
-      <v-btn to="/" text icon color="primary" v-if="!isMainPage">
+      <v-btn to="/" text icon color="primary" v-if="isLoginPage">
         <v-icon>mdi-home</v-icon>
       </v-btn>
+
+      <div v-else-if="isInitialPage">
+        <v-btn to="/" text icon color="primary">
+          <v-icon>mdi-home</v-icon>
+        </v-btn>
+        <v-btn
+          :href="`https://github.com/shanwong29/portfolio-builder`"
+          text
+          small
+          color="primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <v-icon>mdi-information-outline</v-icon>
+        </v-btn>
+      </div>
+
       <div v-else>
         <v-btn class="mr-1" href="/#about" text icon color="primary">
           <v-icon>mdi-face-woman</v-icon>
@@ -45,7 +62,21 @@
     </template>
 
     <template v-else>
-      <v-btn to="/" text small color="primary" v-if="!isMainPage"> <v-icon left>mdi-home</v-icon>Home </v-btn>
+      <v-btn to="/" text small color="primary" v-if="isLoginPage"> <v-icon left>mdi-home</v-icon>Home </v-btn>
+
+      <div v-else-if="isInitialPage">
+        <v-btn to="/" text small color="primary"> <v-icon left>mdi-home</v-icon>Home </v-btn>
+        <v-btn
+          :href="`https://github.com/shanwong29/portfolio-builder`"
+          text
+          small
+          color="primary"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <v-icon left>mdi-information-outline</v-icon>Instructions
+        </v-btn>
+      </div>
 
       <div v-else>
         <v-btn href="/#about" text small color="primary"> <v-icon left>mdi-face-woman</v-icon>About </v-btn>
@@ -130,8 +161,11 @@ export default {
   },
   computed: {
     ...mapState(["isAdmin", "dbAboutData"]),
-    isMainPage() {
-      return this.$route.name === "mainPage";
+    isLoginPage() {
+      return this.$route.name === "admin";
+    },
+    isInitialPage() {
+      return this.$route.name === "initial";
     },
     isPhone() {
       return this.$vuetify.breakpoint.xs;

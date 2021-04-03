@@ -24,6 +24,7 @@ export const routes = [
         }
       } catch (err) {
         console.log(err);
+        // TODO: should go to error page
         next({ name: "mainPage" });
         return;
       }
