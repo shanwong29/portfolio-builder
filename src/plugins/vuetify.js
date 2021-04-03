@@ -21,12 +21,12 @@ const vuetify = new Vuetify({
       dark: {
         background: { base: "#272727", darken1: "#272727", lighten1: "#272727" },
         text: "#e5e6ea",
-        primary: "#b886f7",
-        secondary: "#1dddca",
-        success: "#1dddca",
+        primary: "#1dddca",
+        secondary: "#b886f7",
+        success: "#8b81fc",
         light: colors.blueGrey.lighten5,
         dark: colors.grey.darken3,
-        editBtn: "#1dddca"
+        editBtn: "#8b81fc"
       }
     },
     options: {
