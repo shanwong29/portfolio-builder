@@ -15,11 +15,7 @@
         <v-icon dark>mdi-delete</v-icon>
       </v-btn>
 
-      <v-dialog
-        v-model="showDeleteDialog"
-        :overlay-opacity="0.8"
-        max-width="50%"
-      >
+      <v-dialog v-model="showDeleteDialog" :overlay-opacity="0.8" max-width="50%">
         <v-card>
           <v-card-text class="pt-6">
             <v-icon color="error" class="mx-1">mdi-alert-circle-outline</v-icon>
@@ -40,13 +36,7 @@
       </v-dialog>
 
       <v-overlay :absolute="true" :value="imageUrl">
-        <v-chip
-          color="secondary"
-          :text-color="$vuetify.theme.dark ? 'black' : 'white'"
-          label
-          medium
-          >Preview</v-chip
-        >
+        <v-chip color="secondary" :text-color="$vuetify.theme.dark ? 'black' : 'white'" label medium>Preview</v-chip>
       </v-overlay>
     </v-card>
     <v-form ref="form" v-model="valid" class="d-flex mt-2">
@@ -69,11 +59,7 @@
       ></long-loading-btn>
     </v-form>
 
-    <snackbar
-      v-model="showSnackbar"
-      :hasErr="hasErr"
-      :snackbarMsg="snackbarMsg"
-    />
+    <snackbar v-model="showSnackbar" :hasErr="hasErr" :snackbarMsg="snackbarMsg" />
   </div>
 </template>
 
@@ -103,25 +89,19 @@ export default {
       imageFile: "",
       imageType: "",
       rules: [
-        (value) =>
-          !value ||
-          allowedFileType.indexOf(value.type) >= 0 ||
-          "File type can only be gif / jpeg / png.",
-        (value) =>
-          !value ||
-          value.size < allowedSizeLimit ||
-          "Photo size should be less than 5 MB!",
-      ],
+        value => !value || allowedFileType.indexOf(value.type) >= 0 || "File type can only be gif / jpeg / png.",
+        value => !value || value.size < allowedSizeLimit || "Photo size should be less than 5 MB!"
+      ]
     };
   },
   computed: {
-    ...mapState(["dbProjectsData"]),
+    ...mapState(["dbProjectsData"])
   },
   watch: {
     panel() {
       this.resetFileInput();
       this.$refs.form.reset();
-    },
+    }
   },
   methods: {
     getAcceptedFiles() {
@@ -129,9 +109,7 @@ export default {
       return acceptedFile;
     },
     getCover() {
-      const dbCoverUrl =
-        this.dbProjectsData[this.projectId] &&
-        this.dbProjectsData[this.projectId]["coverUrl"];
+      const dbCoverUrl = this.dbProjectsData[this.projectId] && this.dbProjectsData[this.projectId]["coverUrl"];
 
       let res = { url: "", fromStorage: false };
       if (this.imageUrl) {
@@ -148,7 +126,7 @@ export default {
     async onFilePicked(e) {
       const selectedFile = e;
       await this.$refs.form.validate();
-      if (selectedFile !== undefined && this.valid) {
+      if (selectedFile && this.valid) {
         this.imageName = `${this.projectId}-${this.projectName}`;
         this.imageType = selectedFile.type;
 
@@ -170,7 +148,7 @@ export default {
 
       const coversRef = storageRef.child(`covers/${this.imageName}`);
       var metadata = {
-        contentType: this.imageType,
+        contentType: this.imageType
       };
 
       try {
@@ -185,14 +163,14 @@ export default {
             {
               name: this.projectName,
               coverUrl,
-              stacks: [],
+              stacks: []
             },
             { merge: true }
           );
         } else {
           await docRef.set(
             {
-              coverUrl,
+              coverUrl
             },
             { merge: true }
           );
@@ -212,17 +190,13 @@ export default {
     },
 
     async deleteStorageFile() {
-      const storageCoverRef = storageRef.child(
-        `covers/${this.projectId}-${this.projectName}`
-      );
+      const storageCoverRef = storageRef.child(`covers/${this.projectId}-${this.projectName}`);
 
-      const dbProjectRef = db
-        .collection("projects")
-        .doc(this.projectId.toString());
+      const dbProjectRef = db.collection("projects").doc(this.projectId.toString());
 
       try {
         await dbProjectRef.update({
-          coverUrl: firebase.firestore.FieldValue.delete(),
+          coverUrl: firebase.firestore.FieldValue.delete()
         });
 
         await storageCoverRef.delete();
@@ -243,8 +217,8 @@ export default {
       this.imageFile = "";
       this.imageUrl = "";
       this.imageType = "";
-    },
-  },
+    }
+  }
 };
 </script>
 
