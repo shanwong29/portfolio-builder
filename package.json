@@ -5,12 +5,15 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "cypress:open": "FIRESTORE_EMULATOR_HOST=localhost:8081 FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 cypress open",
+    "test": "FIRESTORE_EMULATOR_HOST=localhost:8081 FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 mocha",
+    "test:emulator": "firebase emulators:start"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
-    "firebase": "^7.15.5",
+    "firebase": "^8.3.3",
     "markdown-it": "^11.0.0",
     "markdown-it-emoji": "^1.4.0",
     "vue": "^2.6.11",
@@ -20,12 +23,16 @@
     "vuex": "^3.5.1"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^1.2.7",
+    "@testing-library/cypress": "^7.0.6",
     "@vue/cli-plugin-babel": "~4.4.0",
     "@vue/cli-plugin-eslint": "~4.4.0",
     "@vue/cli-service": "~4.4.0",
     "babel-eslint": "^10.1.0",
+    "cypress": "^6.8.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "mocha": "^8.3.2",
     "sass": "^1.19.0",
     "sass-loader": "^8.0.0",
     "vue-cli-plugin-vuetify": "~2.0.7",

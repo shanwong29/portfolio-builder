@@ -67,7 +67,7 @@
 import { mapState } from "vuex";
 import LongLoadingBtn from "../LongLoadingBtn";
 import Snackbar from "../Snackbar";
-import * as firebase from "firebase/app";
+import firebase from "@firebase/app";
 import { db, storage } from "../../firebase-config/init";
 const storageRef = storage.ref();
 const allowedFileType = ["image/gif", "image/jpeg", "image/png"];

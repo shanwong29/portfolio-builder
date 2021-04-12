@@ -1,4 +1,4 @@
-import * as firebase from "firebase/app";
+import firebase from "@firebase/app";
 import "firebase/firestore";
 import "firebase/auth";
 import "firebase/storage";
@@ -11,12 +11,18 @@ var firebaseConfig = {
   projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
   storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET,
   messagingSenderId: process.env.VUE_APP_FIREBASE_MESSENGER_SENDER_ID,
-  appId: process.env.VUE_APP_FIREBASE_APP_ID,
+  appId: process.env.VUE_APP_FIREBASE_APP_ID
 };
 
 firebase.initializeApp(firebaseConfig);
 
-export const db = firebase.firestore();
+const db = firebase.firestore();
+
+if (location.hostname === "localhost") {
+  db.settings({ experimentalForceLongPolling: true });
+  db.useEmulator("localhost", 8081);
+}
+export { db };
 export const auth = firebase.auth();
 export const functions = firebase.functions();
 export const storage = firebase.storage();

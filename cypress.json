@@ -1,0 +1,6 @@
+{
+  "baseUrl": "http://localhost:8080",
+  "env": {
+    "github_api_url": "https://api.github.com/users/shanwong29/repos"
+  }
+}

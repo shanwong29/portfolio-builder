@@ -14,7 +14,8 @@
         close-icon="mdi-delete"
         close
         @click:close="deleteTechStack(stack)"
-      >{{ stack }}</v-chip>
+        >{{ stack }}</v-chip
+      >
     </template>
     <div class="d-flex align-center mt-2">
       <v-text-field v-model="stackToBeAdded" label="Add Stack" v-on:keyup.enter="addStack"></v-text-field>
@@ -31,7 +32,7 @@
 <script>
 import { db } from "../../firebase-config/init";
 import { mapState } from "vuex";
-import * as firebase from "firebase/app";
+import firebase from "@firebase/app";
 import Snackbar from "../Snackbar";
 
 export default {
@@ -42,8 +43,7 @@ export default {
       stackToBeAdded: "",
       hasErr: false,
       showSnackbar: false,
-      errMsg:
-        "Something goes wrong!! Cannot update additional info of this project."
+      errMsg: "Something goes wrong!! Cannot update additional info of this project."
     };
   },
   computed: {
@@ -81,10 +81,7 @@ export default {
             { merge: true }
           );
         } else {
-          const updatedStacks = new Set([
-            ...this.dbProjectsData[this.projectId]["stacks"],
-            this.stackToBeAdded.trim()
-          ]);
+          const updatedStacks = new Set([...this.dbProjectsData[this.projectId]["stacks"], this.stackToBeAdded.trim()]);
 
           const sortedStacks = Array.from(updatedStacks).sort();
           await docRef.update({
