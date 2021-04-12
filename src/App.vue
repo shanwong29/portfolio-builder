@@ -26,7 +26,10 @@ export default {
     try {
       // get data from github
       const githubRepoApi = `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}/repos`;
-      const { data } = await axios.get(githubRepoApi, {
+
+      const githubOwnerApi = `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}`;
+
+      const reposPromise = axios.get(githubRepoApi, {
         params: {
           per_page: 100,
           sort: "created",
@@ -34,7 +37,12 @@ export default {
         }
       });
 
-      this.$store.commit({ type: "setGithubData", data });
+      const ownerPromise = axios.get(githubOwnerApi);
+
+      const [reposRes, ownerRes] = await Promise.all([reposPromise, ownerPromise]);
+
+      this.$store.commit({ type: "setGithubData", data: { repos: reposRes.data, owner: ownerRes.data } });
+
       //check if this user is a admin when page is loaded and everytime when there is auth changes
       auth.onAuthStateChanged(async user => {
         if (user) {

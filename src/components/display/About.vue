@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper mt-10">
     <div class="profile-pic-wrapper">
-      <v-skeleton-loader v-if="!profilePicUrl" type="avatar"></v-skeleton-loader>
-      <img v-else class="profile-pic" :src="profilePicUrl" :alt="dbAboutData.name" />
+      <v-skeleton-loader v-if="loadingGithubData" type="avatar"></v-skeleton-loader>
+      <img v-else class="profile-pic" :src="githubOwnerData.avatar_url" :alt="githubOwnerData.name" />
     </div>
 
     <div class="basicInfo">
@@ -27,13 +27,12 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from "vuex";
+import { mapState } from "vuex";
 
 export default {
   name: "About",
   computed: {
-    ...mapGetters(["profilePicUrl"]),
-    ...mapState(["dbAboutData", "loadingDbAbout"])
+    ...mapState(["dbAboutData", "loadingDbAbout", "loadingGithubData", "githubOwnerData"])
   }
 };
 </script>

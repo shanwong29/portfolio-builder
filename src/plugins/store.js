@@ -6,7 +6,14 @@ Vue.use(Vuex);
 
 export const store = new Vuex.Store({
   state: {
-    githubData: [], //unlike react, all states need to be initialized here before used
+    githubOwnerData: {
+      avatar_url: "",
+      bio: "",
+      email: "",
+      id: "",
+      name: ""
+    },
+    githubReposData: [], //unlike react, all states need to be initialized here before used
     dbAboutData: {},
     dbProjectsData: {},
     dbContactData: {},
@@ -18,10 +25,10 @@ export const store = new Vuex.Store({
   },
   getters: {
     filteredGithubData: state => {
-      return state.githubData.filter(el => el.fork === false);
+      return state.githubReposData.filter(el => el.fork === false);
     },
     profilePicUrl: state => {
-      return state.githubData.length ? state.githubData[state.githubData.length - 1].owner.avatar_url : "";
+      return state.githubOwnerData.avatar_url ? state.githubOwnerData.avatar_url : "";
     },
     linkedinUrl: state => {
       return state.dbContactData.linkedin;
@@ -33,7 +40,9 @@ export const store = new Vuex.Store({
 
   mutations: {
     setGithubData: (state, payload) => {
-      state.githubData = payload.data;
+      state.githubReposData = payload.data.repos;
+      const { avatar_url, bio, email, id, name } = payload.data.owner;
+      state.githubOwnerData = { avatar_url, bio, email, id, name };
       state.loadingGithubData = false;
     },
     setIsAdmin: (state, payload) => {
