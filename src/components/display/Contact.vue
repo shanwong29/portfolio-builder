@@ -8,7 +8,7 @@
         fab
         dark
         large
-        :href="`https://github.com/shanwong29`"
+        :href="`https://github.com/${githubLogin}`"
         target="_blank"
         rel="noopener noreferrer"
         :style="{ background: 'linear-gradient(45deg, #000000, #353535, #000000 )' }"
@@ -45,8 +45,8 @@ export default {
   name: "Contact",
 
   computed: {
-    githubUrl() {
-      return this.$store.getters.githubUrl;
+    githubLogin() {
+      return process.env.VUE_APP_GITHUB_USERNAME;
     },
     linkedinUrl() {
       return this.$store.getters.linkedinUrl;

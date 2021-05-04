@@ -5,6 +5,7 @@
       <v-form ref="form" v-model="valid" class="d-flex flex-column form">
         <div>
           <v-text-field
+            id="Email"
             v-model="email"
             label="Email"
             :rules="emailRules"
@@ -13,6 +14,7 @@
           ></v-text-field>
 
           <v-text-field
+            id="Password"
             v-model="password"
             :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
             :rules="passwordRules"
@@ -33,11 +35,7 @@
         ></long-loading-btn>
       </v-form>
     </v-card>
-    <snackbar
-      v-model="showSnackbar"
-      :hasErr="hasErr"
-      :snackbarMsg="snackbarMsg"
-    />
+    <snackbar v-model="showSnackbar" :hasErr="hasErr" :snackbarMsg="snackbarMsg" />
   </v-container>
 </template>
 
@@ -57,11 +55,8 @@ export default {
       email: "",
       password: "",
       snackbarMsg: "",
-      emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-      ],
-      passwordRules: [(v) => !!v || "Password is required"],
+      emailRules: [v => !!v || "E-mail is required", v => /.+@.+\..+/.test(v) || "E-mail must be valid"],
+      passwordRules: [v => !!v || "Password is required"]
     };
   },
   methods: {
@@ -70,10 +65,7 @@ export default {
       if (this.valid) {
         this.isLoading = true;
         try {
-          const cred = await auth.signInWithEmailAndPassword(
-            this.email,
-            this.password
-          );
+          const cred = await auth.signInWithEmailAndPassword(this.email, this.password);
           console.log(cred);
           this.$router.push("/");
           this.showSnackbar = false;
@@ -87,8 +79,8 @@ export default {
         }
         this.isLoading = false;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
