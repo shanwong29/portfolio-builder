@@ -25,12 +25,10 @@ module.exports = (on, config) => {
 
   on("task", {
     createAdminUser({ email, password, displayName }) {
-      console.log(initialized, "djaskjd");
       if (!initialized) {
         admin.initializeApp({ projectId: "shanwong" });
         initialized = true;
       }
-      console.log("hehehehehehe");
 
       admin
         .auth()

@@ -25,3 +25,10 @@
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
 import "@testing-library/cypress/add-commands";
+
+import { auth } from "../../src/firebase-config/init";
+
+Cypress.Commands.add("login", async (email, password) => {
+  await auth.signInWithEmailAndPassword(email, password);
+  return null;
+});

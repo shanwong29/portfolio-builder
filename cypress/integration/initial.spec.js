@@ -2,8 +2,6 @@ const testEmail = "octo-cat@test-email.com";
 const testPassword = "password-password";
 const testUserName = "Octo-Cat";
 
-// const firebase = require("@firebase/rules-unit-testing");
-
 describe("A user without no documents in firestore initialize app", () => {
   beforeEach(() => {
     cy.visit("/initial");
@@ -43,7 +41,7 @@ describe("A user without no documents in firestore initialize app", () => {
     cy.url().should("eq", "http://localhost:8080/admin");
   });
 
-  it("should not always redirect user to home page when user revisit initial page after successful initialization", () => {
+  it("should always redirect user to home page when user revisit initial page after successful initialization", () => {
     cy.url().should("eq", "http://localhost:8080/");
     cy.wait(5000);
 

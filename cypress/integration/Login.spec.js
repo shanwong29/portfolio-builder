@@ -1,23 +1,10 @@
 const testEmail = "octo-cat@test-email.com";
 const testPassword = "password-password";
 const testUserName = "Octo-Cat";
-import { auth } from "../../src/firebase-config/init";
-
-// const firebase = require("@firebase/rules-unit-testing");
 
 describe("A user without no documents in firestore initialize app", () => {
   before(() => {
-    // cy.request("POST", "http://localhost:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=fake-api-key", {
-    //   email: testEmail,
-    //   password: testPassword,
-    //   returnSecureToken: true
-    // });
-
-    cy.task("createAdminUser", { email: testEmail, password: testPassword, displayName: testUserName }).then(() => {
-      auth.signOut().then(sth => {
-        console.log("sth, ", sth);
-      });
-    });
+    cy.task("createAdminUser", { email: testEmail, password: testPassword, displayName: testUserName });
   });
 
   beforeEach(() => {
@@ -56,7 +43,6 @@ describe("A user without no documents in firestore initialize app", () => {
     cy.get("button")
       .contains("Login")
       .click();
-    // cy.url().should("eq", "http://localhost:8080");
     cy.location("pathname").should("eq", "/");
   });
 
