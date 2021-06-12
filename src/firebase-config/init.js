@@ -4,6 +4,10 @@ import "@firebase/auth";
 import "@firebase/storage";
 import "@firebase/functions";
 
+const isTestEnv = location.hostname === "localhost";
+
+let initialized = false;
+
 let firebaseConfig = {
   apiKey: process.env.VUE_APP_FIREBASE_API_KEY,
   authDomain: process.env.VUE_APP_FIREBASE_AUTH_DOMAIN,
@@ -14,19 +18,26 @@ let firebaseConfig = {
   appId: process.env.VUE_APP_FIREBASE_APP_ID
 };
 
-firebase.initializeApp(firebaseConfig);
+const config = isTestEnv
+  ? { projectId: "shanwong", apiKey: "fake-api-key", storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET }
+  : firebaseConfig;
+
+if (!initialized) {
+  firebase.initializeApp(config);
+  initialized = true;
+}
 
 const db = firebase.firestore();
 const auth = firebase.auth();
 const functions = firebase.functions();
+const storage = firebase.storage();
 
-if (location.hostname === "localhost") {
+if (isTestEnv) {
   db.settings({ experimentalForceLongPolling: true });
   db.useEmulator("localhost", 8081);
   auth.useEmulator("http://localhost:9099");
   functions.useEmulator("localhost", 5001);
+  storage.useEmulator("localhost", 9199);
 }
 
-export { db, auth, functions };
-
-export const storage = firebase.storage();
+export { db, auth, functions, storage };

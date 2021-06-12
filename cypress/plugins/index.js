@@ -12,6 +12,9 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
+const admin = require("firebase-admin");
+
+let initialized = false;
 /**
  * @type {Cypress.PluginConfig}
  */
@@ -19,4 +22,29 @@
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
-}
+
+  on("task", {
+    createAdminUser({ email, password, displayName }) {
+      console.log(initialized, "djaskjd");
+      if (!initialized) {
+        admin.initializeApp({ projectId: "shanwong" });
+        initialized = true;
+      }
+      console.log("hehehehehehe");
+
+      admin
+        .auth()
+        .createUser({
+          email,
+          password,
+          displayName
+        })
+        .then(user => {
+          console.log(user);
+          admin.auth().setCustomUserClaims(user.uid, { admin: true });
+        });
+
+      return null;
+    }
+  });
+};

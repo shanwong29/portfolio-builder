@@ -41,7 +41,7 @@
     <div class="input-wrapper">
       <v-text-field v-model="interestToBeAdded" label="Add Interest" v-on:keyup.enter="addInterest"></v-text-field>
 
-      <v-btn icon color="success" @click="addInterest" class="mx-2">
+      <v-btn data-test-id="add-interest-btn" icon color="success" @click="addInterest" class="mx-2">
         <v-icon>mdi-plus-circle-outline</v-icon>
       </v-btn>
     </div>

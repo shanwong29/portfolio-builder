@@ -116,6 +116,7 @@
           class="ma-2"
           :class="$vuetify.theme.dark ? 'black--text' : 'white--text'"
           @click="toogleEditPopUp"
+          data-test-id="edit-btn"
           >Edit</v-btn
         >
 

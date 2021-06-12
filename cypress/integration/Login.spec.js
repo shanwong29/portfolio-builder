@@ -1,15 +1,22 @@
 const testEmail = "octo-cat@test-email.com";
 const testPassword = "password-password";
 const testUserName = "Octo-Cat";
+import { auth } from "../../src/firebase-config/init";
 
 // const firebase = require("@firebase/rules-unit-testing");
 
 describe("A user without no documents in firestore initialize app", () => {
   before(() => {
-    cy.request("POST", "http://localhost:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=fake-api-key", {
-      email: testEmail,
-      password: testPassword,
-      returnSecureToken: true
+    // cy.request("POST", "http://localhost:9099/identitytoolkit.googleapis.com/v1/accounts:signUp?key=fake-api-key", {
+    //   email: testEmail,
+    //   password: testPassword,
+    //   returnSecureToken: true
+    // });
+
+    cy.task("createAdminUser", { email: testEmail, password: testPassword, displayName: testUserName }).then(() => {
+      auth.signOut().then(sth => {
+        console.log("sth, ", sth);
+      });
     });
   });
 
@@ -55,5 +62,12 @@ describe("A user without no documents in firestore initialize app", () => {
 
   it("should not always redirect user to home page when user has already login", () => {
     cy.location("pathname").should("eq", "/");
+  });
+
+  it("should show edit button on main page when user is login", () => {
+    cy.location("pathname").should("eq", "/");
+    cy.get("button")
+      .contains("Edit")
+      .should("be.visible");
   });
 });

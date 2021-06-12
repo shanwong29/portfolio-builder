@@ -45,5 +45,10 @@ describe("A user without no documents in firestore initialize app", () => {
 
   it("should not always redirect user to home page when user revisit initial page after successful initialization", () => {
     cy.url().should("eq", "http://localhost:8080/");
+    cy.wait(5000);
+
+    cy.get("button")
+      .contains("Edit")
+      .should("be.visible");
   });
 });
