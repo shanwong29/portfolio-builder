@@ -1,16 +1,7 @@
 <template>
   <v-form ref="form" v-model="valid">
-    <v-text-field
-      v-model="linkedin"
-      :rules="urlRules"
-      label="Linkedin"
-      required
-    ></v-text-field>
-    <v-text-field
-      v-model="email"
-      :rules="emailRules"
-      label="email"
-    ></v-text-field>
+    <v-text-field v-model="linkedin" :rules="urlRules" label="Linkedin" required></v-text-field>
+    <v-text-field v-model="email" :rules="emailRules" label="email"></v-text-field>
     <div class="d-flex justify-end">
       <v-btn
         color="primary"
@@ -20,11 +11,7 @@
         >Save Changes</v-btn
       >
     </div>
-    <snackbar
-      v-model="showSnackbar"
-      :hasErr="hasErr"
-      :snackbarMsg="snackbarMsg"
-    />
+    <snackbar v-model="showSnackbar" :hasErr="hasErr" :snackbarMsg="snackbarMsg" />
   </v-form>
 </template>
 
@@ -43,11 +30,8 @@ export default {
       showSnackbar: false,
       snackbarMsg: "",
       valid: false,
-      emailRules: [
-        (v) => !!v || "E-mail is required",
-        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
-      ],
-      urlRules: [(v) => !!v || "Url is required"],
+      emailRules: [v => !v || (v && /.+@.+\..+/.test(v)) || "E-mail must be valid"],
+      urlRules: [v => !!v || "Url is required"]
     };
   },
 
@@ -59,7 +43,7 @@ export default {
         try {
           await docRef.set({
             linkedin: this.linkedin,
-            email: this.email,
+            email: this.email
           });
           this.showSnackbar = true;
           this.snackbarMsg = "Successfully updated Contact.";
@@ -71,8 +55,8 @@ export default {
           this.hasErr = true;
         }
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

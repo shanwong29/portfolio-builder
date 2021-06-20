@@ -1,15 +1,9 @@
 <template>
   <div>
     <v-row class="center">
-      <v-dialog
-        v-model="openEditPopUp"
-        fullscreen
-        hide-overlay
-        transition="dialog-bottom-transition"
-        scrollable
-      >
+      <v-dialog v-model="openEditPopUp" fullscreen hide-overlay transition="dialog-bottom-transition" scrollable>
         <v-card tile>
-          <v-app-bar flat dense dark color="black" app>
+          <v-app-bar flat dense dark color="black" app id="edit-pop-up-navbar">
             <v-icon class="mr-4">mdi-pencil</v-icon>
             <v-tabs v-model="tab" background-color="black" color="white">
               <v-tab @click="setDisplayEditCmp('EditAbout')">About</v-tab>
@@ -19,7 +13,7 @@
 
             <v-spacer></v-spacer>
 
-            <v-btn icon dark @click="toogleEditPopUp">
+            <v-btn data-test-id="close-edit-pop-up-btn" icon dark @click="toogleEditPopUp">
               <v-icon>mdi-close</v-icon>
             </v-btn>
           </v-app-bar>
@@ -46,11 +40,11 @@ export default {
   data() {
     return {
       tab: null,
-      displayEditCmp: "EditAbout",
+      displayEditCmp: "EditAbout"
     };
   },
   computed: {
-    ...mapState(["openEditPopUp"]),
+    ...mapState(["openEditPopUp"])
   },
   methods: {
     setDisplayEditCmp(targetCmp) {
@@ -58,8 +52,8 @@ export default {
     },
     toogleEditPopUp() {
       this.$store.commit({ type: "toogleEditPopUp" });
-    },
-  },
+    }
+  }
 };
 </script>
 

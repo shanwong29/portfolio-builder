@@ -24,13 +24,13 @@ module.exports = (on, config) => {
   // `config` is the resolved Cypress config
 
   on("task", {
-    createAdminUser({ email, password, displayName }) {
+    async initializeAccount({ email, password, displayName }) {
       if (!initialized) {
         admin.initializeApp({ projectId: "shanwong" });
         initialized = true;
       }
 
-      admin
+      await admin
         .auth()
         .createUser({
           email,
@@ -40,6 +40,15 @@ module.exports = (on, config) => {
         .then(user => {
           console.log(user);
           admin.auth().setCustomUserClaims(user.uid, { admin: true });
+        });
+
+      await admin
+        .firestore()
+        .collection("personalInfo")
+        .doc("about")
+        .set({
+          name: displayName,
+          interests: []
         });
 
       return null;

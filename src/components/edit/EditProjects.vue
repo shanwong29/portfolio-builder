@@ -1,10 +1,14 @@
 <template>
   <div>
     <v-expansion-panels v-model="panel" focusable>
-      <v-expansion-panel v-for="project in filteredGithubData" :key="project.id">
+      <v-expansion-panel
+        v-for="(project, index) in filteredGithubData"
+        :key="project.id"
+        :data-test-id="`expand-panel-${index}`"
+      >
         <v-expansion-panel-header>
           <span>
-            <v-icon left>{{ fieldExist(project.id, 'show') ?'mdi-eye': "mdi-eye-off"}}</v-icon>
+            <v-icon left>{{ fieldExist(project.id, "show") ? "mdi-eye" : "mdi-eye-off" }}</v-icon>
             {{ project.name }}
           </span>
         </v-expansion-panel-header>
@@ -13,19 +17,11 @@
           <div class="my-2">
             <v-row>
               <v-col :md="5" :xs="12">
-                <edit-projects-cover
-                  :projectId="project.id"
-                  :projectName="project.name"
-                  :panel="panel"
-                />
+                <edit-projects-cover :projectId="project.id" :projectName="project.name" :panel="panel" />
               </v-col>
 
               <v-col>
-                <edit-projects-additional-info
-                  :projectId="project.id"
-                  :projectName="project.name"
-                  :panel="panel"
-                />
+                <edit-projects-additional-info :projectId="project.id" :projectName="project.name" :panel="panel" />
               </v-col>
             </v-row>
           </div>
@@ -67,5 +63,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

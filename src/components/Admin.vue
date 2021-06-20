@@ -67,17 +67,19 @@ export default {
         try {
           const cred = await auth.signInWithEmailAndPassword(this.email, this.password);
           console.log(cred);
-          this.$router.push("/");
           this.showSnackbar = false;
           this.hasErr = false;
+          this.isLoading = false;
+
+          await this.$router.push("/");
         } catch (err) {
           console.log(err);
-          this.$refs.form.resetValidation();
           this.showSnackbar = true;
           this.snackbarMsg = "Invalid credential";
           this.hasErr = true;
+          this.isLoading = false;
+          await this.$refs.form.resetValidation();
         }
-        this.isLoading = false;
       }
     }
   }

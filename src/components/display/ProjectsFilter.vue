@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex justify-center align-center mt-4 mt-sm-8 mb-4">
+  <div class="d-flex justify-center align-center mt-4 mt-sm-8 mb-4" data-test-id="project-filter">
     <div :style="{ maxWidth: getPanelWidth + '%' }" v-if="getAreProjectsLoading">
       <v-skeleton-loader v-bind="{ width: getLoaderWidth }" type="heading"></v-skeleton-loader>
     </div>
@@ -17,7 +17,7 @@
         </v-slide-item>
       </v-slide-group>
     </v-sheet>
-    <v-btn icon @click="clearTechStacksFilter">
+    <v-btn icon @click="clearTechStacksFilter" data-test-id="clear-filter-btn">
       <v-icon>mdi-close-circle</v-icon>
     </v-btn>
   </div>
@@ -78,4 +78,3 @@ export default {
   }
 };
 </script>
-

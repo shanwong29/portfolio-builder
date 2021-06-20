@@ -1,18 +1,21 @@
+import { before } from "mocha";
+import { testId } from "../test-id/index";
 const testEmail = "octo-cat@test-email.com";
 const testPassword = "password-password";
 const testUserName = "Octo-Cat";
 
-describe("A user without no documents in firestore initialize app", () => {
+describe("A admin user tries to login", () => {
   before(() => {
-    cy.task("createAdminUser", { email: testEmail, password: testPassword, displayName: testUserName });
+    cy.task("initializeAccount", { email: testEmail, password: testPassword, displayName: testUserName });
   });
 
   beforeEach(() => {
+    cy.stubGithubApiCall();
     cy.visit("/admin");
   });
 
   after(async () => {
-    cy.request("DELETE", "http://localhost:9099/emulator/v1/projects/shanwong/accounts");
+    cy.cleanUpEmulatorData();
   });
 
   it("should display a Login Form", () => {
@@ -45,15 +48,53 @@ describe("A user without no documents in firestore initialize app", () => {
       .click();
     cy.location("pathname").should("eq", "/");
   });
+});
 
-  it("should not always redirect user to home page when user has already login", () => {
+describe("A loggedin admin user access app", () => {
+  before(() => {
+    cy.task("initializeAccount", { email: testEmail, password: testPassword, displayName: testUserName });
+    cy.login(testEmail, testPassword);
+  });
+
+  beforeEach(() => {
+    cy.stubGithubApiCall();
+  });
+
+  after(async () => {
+    cy.cleanUpEmulatorData();
+  });
+
+  it("should always redirect user to home page when user tries to access login page", () => {
+    cy.visit("/admin");
     cy.location("pathname").should("eq", "/");
   });
 
-  it("should show edit button on main page when user is login", () => {
-    cy.location("pathname").should("eq", "/");
-    cy.get("button")
-      .contains("Edit")
-      .should("be.visible");
+  it("should show edit button on main page", () => {
+    cy.visit("/");
+    cy.get(`[data-test-id=${testId.editBtn}]`).should("be.visible");
+  });
+
+  it("should show logout button on main page", () => {
+    cy.visit("/");
+    cy.get(`[data-test-id=${testId.logoutBtn}]`).should("be.visible");
+  });
+});
+
+describe("A loggedin admin user logout", () => {
+  before(() => {
+    cy.task("initializeAccount", { email: testEmail, password: testPassword, displayName: testUserName });
+    cy.login(testEmail, testPassword);
+    cy.stubGithubApiCall();
+    cy.visit("/");
+    cy.get(`[data-test-id=${testId.logoutBtn}]`).click();
+  });
+
+  after(async () => {
+    cy.cleanUpEmulatorData();
+  });
+
+  it("should NOT show edit and logout buttons on main page", () => {
+    cy.get(`[data-test-id=${testId.editBtn}]`).should("not.exist");
+    cy.get(`[data-test-id=${testId.logoutBtn}]`).should("not.exist");
   });
 });

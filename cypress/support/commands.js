@@ -32,3 +32,23 @@ Cypress.Commands.add("login", async (email, password) => {
   await auth.signInWithEmailAndPassword(email, password);
   return null;
 });
+
+Cypress.Commands.add("stubGithubApiCall", () => {
+  cy.intercept(
+    "GET",
+    "https://api.github.com/users/octocat/repos",
+
+    { fixture: "github-repos-api.json" }
+  );
+  cy.intercept(
+    "GET",
+    "https://api.github.com/users/octocat",
+
+    { fixture: "github-owner-api.json" }
+  );
+});
+
+Cypress.Commands.add("cleanUpEmulatorData", () => {
+  cy.request("DELETE", "http://localhost:9099/emulator/v1/projects/shanwong/accounts");
+  cy.request("DELETE", "http://localhost:8081/emulator/v1/projects/shanwong/databases/(default)/documents");
+});

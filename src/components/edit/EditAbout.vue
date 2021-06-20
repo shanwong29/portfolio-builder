@@ -4,11 +4,12 @@
 
     <v-text-field v-model="bio" label="One-line Bio"></v-text-field>
 
-    <v-textarea name="input-7-1" label="Self introduction" :value="description" @input="modifyDescription"></v-textarea>
+    <v-textarea name="input-7-1" label="Self Introduction" :value="description" @input="modifyDescription"></v-textarea>
 
     <p class="subtitle-1 mb-2">Interests</p>
     <div v-for="(modifiedInterest, index) in modifiedInterests" :key="index" class="d-flex">
       <v-text-field
+        data-test-id="added-interest-input"
         :style="{ width: '30%' }"
         :value="modifiedInterest"
         :background-color="!$vuetify.theme.dark ? 'light' : 'dark'"
@@ -20,11 +21,18 @@
         class="mb-2"
       ></v-text-field>
 
-      <v-btn icon @click.prevent="moveInterestUp(index)" class="ml-1" :disabled="index === 0">
+      <v-btn
+        data-test-id="move-interest-up"
+        icon
+        @click.prevent="moveInterestUp(index)"
+        class="ml-1"
+        :disabled="index === 0"
+      >
         <v-icon>mdi-arrow-up-bold-circle</v-icon>
       </v-btn>
 
       <v-btn
+        data-test-id="move-interest-down"
         icon
         @click.prevent="moveInterestDown(index)"
         class="ml-1"
@@ -33,7 +41,7 @@
         <v-icon>mdi-arrow-down-bold-circle</v-icon>
       </v-btn>
 
-      <v-btn icon color="error" @click="deleteInterest" class="ml-1">
+      <v-btn data-test-id="delete-interest-btn" icon color="error" @click="deleteInterest(index)" class="ml-1">
         <v-icon>mdi-delete</v-icon>
       </v-btn>
     </div>
@@ -79,6 +87,7 @@ export default {
   components: { Snackbar },
   data() {
     const { name, bio, description, interests, showContributions } = this.$store.state.dbAboutData;
+
     return {
       valid: false,
       nameRules: [v => !!v || "Display name is required"],
@@ -88,9 +97,9 @@ export default {
       name: name,
       bio: bio || "",
       description: description || "",
-      modifiedInterests: [...interests],
+      modifiedInterests: interests ? [...interests] : [],
       interestToBeAdded: "",
-      showContributions
+      showContributions: showContributions || false
     };
   },
 
@@ -155,7 +164,7 @@ export default {
         console.error();
         this.snackbar = true;
         this.hasErr = true;
-        this.snackbarMsg = "Something goes wrong! Cannot update About.";
+        this.snackbarMsg = `Something goes wrong! Cannot update About. \nError: ${err}`;
       }
     }
   }

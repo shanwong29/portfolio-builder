@@ -26,11 +26,41 @@ import Contributions from "./display/Contributions";
 import Contact from "./display/Contact";
 import EditPopUp from "./edit/EditPopUp";
 import { mapState } from "vuex";
+import axios from "axios";
 
 export default {
   components: { About, Projects, Contributions, Contact, EditPopUp },
   computed: {
     ...mapState(["isAdmin", "dbAboutData"])
+  },
+
+  async created() {
+    try {
+      // get data from github
+      const githubRepoApi = `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}/repos`;
+      const githubOwnerApi = `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}`;
+
+      const reposPromise = axios.get(githubRepoApi, {
+        params: {
+          per_page: 100,
+          sort: "created",
+          direction: "desc"
+        }
+      });
+
+      const ownerPromise = axios.get(githubOwnerApi);
+
+      const [reposRes, ownerRes] = await Promise.all([reposPromise, ownerPromise]);
+
+      this.$store.commit({ type: "setGithubData", data: { repos: reposRes.data, owner: ownerRes.data } });
+
+      // get data from firestore
+      this.$store.dispatch("getDbAbout");
+      this.$store.dispatch("getDbProjects");
+      this.$store.dispatch("getDbContact");
+    } catch (err) {
+      console.log(err);
+    }
   }
 };
 </script>

@@ -9,7 +9,6 @@
 
 <script>
 import Navbar from "./components/Navbar";
-import axios from "axios";
 import { auth } from "./firebase-config/init";
 
 export default {
@@ -24,25 +23,6 @@ export default {
     }
 
     try {
-      // get data from github
-      const githubRepoApi = `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}/repos`;
-
-      const githubOwnerApi = `https://api.github.com/users/${process.env.VUE_APP_GITHUB_USERNAME}`;
-
-      const reposPromise = axios.get(githubRepoApi, {
-        params: {
-          per_page: 100,
-          sort: "created",
-          direction: "desc"
-        }
-      });
-
-      const ownerPromise = axios.get(githubOwnerApi);
-
-      const [reposRes, ownerRes] = await Promise.all([reposPromise, ownerPromise]);
-
-      this.$store.commit({ type: "setGithubData", data: { repos: reposRes.data, owner: ownerRes.data } });
-
       //check if this user is a admin when page is loaded and everytime when there is auth changes
       auth.onAuthStateChanged(async user => {
         if (user) {
@@ -61,10 +41,6 @@ export default {
     } catch (err) {
       console.log(err);
     }
-    // get data from firestore
-    this.$store.dispatch("getDbAbout");
-    this.$store.dispatch("getDbProjects");
-    this.$store.dispatch("getDbContact");
   }
 };
 </script>

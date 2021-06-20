@@ -122,7 +122,7 @@
 
         <v-tooltip bottom>
           <template v-slot:activator="{ on, attrs }">
-            <v-btn icon v-bind="attrs" v-on="on" @click="logout">
+            <v-btn icon v-bind="attrs" v-on="on" @click="logout" data-test-id="logout-btn">
               <v-icon>mdi-exit-to-app</v-icon>
             </v-btn>
           </template>

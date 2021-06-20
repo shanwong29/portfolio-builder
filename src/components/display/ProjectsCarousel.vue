@@ -17,7 +17,12 @@
       </slide>
     </template>
     <template v-else>
-      <slide v-for="project in getStackFilteredShownProjects" :key="project.id" class="slide">
+      <slide
+        v-for="project in getStackFilteredShownProjects"
+        :key="project.id"
+        class="slide"
+        data-test-id="project-card"
+      >
         <v-hover v-slot:default="{ hover }" class="card">
           <v-card>
             <v-img aspect-ratio="1.7" :src="getCoverUrl(project.id)" class="cover">
