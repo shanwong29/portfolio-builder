@@ -38,7 +38,6 @@ module.exports = (on, config) => {
           displayName
         })
         .then(user => {
-          console.log(user);
           admin.auth().setCustomUserClaims(user.uid, { admin: true });
         });
 

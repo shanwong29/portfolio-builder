@@ -1,23 +1,83 @@
-name: Portfolio deploy
+name: Portfolio page test, build and deploy
+
 on:
   push:
     paths-ignore:
-      - "functions/**"
-      - "security-rules/**"
-      - ".github/workflows/*.yaml"
-      - "!.github/workflows/hosting.yaml"
+      - ".github/workflows/security-rules.yaml"
       - "*.md"
       - ".gitignore"
-    branches:
-      - master
+
 jobs:
-  Build:
-    runs-on: ubuntu-latest
+  Test:
+    runs-on: ubuntu-20.04
+    name: E2E on Chrome
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
           node-version: 12.x
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Install Dependencies
+        if: steps.cache-npm.outputs.cache-hit != 'true'
+        run: npm ci
+      - name: Cache node modules for functions
+        id: cache-node-modules-functions
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules-functions
+        with:
+          path: ~/.npm/functions
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./functions/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Install Dependencies for functions
+        run: |
+          cd functions/
+          npm ci
+          cd ..
+      - name: Include firebase
+        run: npm i -g firebase-tools
+      - name: Set default firebase project
+        env:
+          DEFAULT_PROJECT: ${{ secrets.VUE_APP_FIREBASE_PROJECT_ID }}
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+        run: |
+          firebase use --add "$DEFAULT_PROJECT" --token "$FIREBASE_TOKEN"
+      - name: Run test
+        uses: cypress-io/github-action@v2
+        with:
+          browser: chrome
+          start: npm run dev:emulator
+          wait-on: "http://localhost:4000, http://localhost:8080"
+          command: npm run cy:run
+
+  Build:
+    if: github.ref == 'refs/heads/master'
+    needs: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        id: cache-npm
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
       - name: Install Dependencies
         run: npm ci
       - name: Build the static files
@@ -36,6 +96,7 @@ jobs:
         with:
           name: production-artifact
           path: dist
+
   Deploy:
     needs: build
     runs-on: ubuntu-latest
