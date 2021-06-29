@@ -4,8 +4,7 @@ import "@firebase/auth";
 import "@firebase/storage";
 import "@firebase/functions";
 
-const isTestEnv = location.hostname === "localhost";
-
+const isTestEnv = process.env.NODE_ENV !== "production";
 let initialized = false;
 
 let firebaseConfig = {

@@ -6,9 +6,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "cypress:open": "FIRESTORE_EMULATOR_HOST=localhost:8081 FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 FIREBASE_STORAGE_EMULATOR_HOST=localhost:9199 cypress open",
-    "test": "FIRESTORE_EMULATOR_HOST=localhost:8081 FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 mocha",
-    "test:emulator": "firebase emulators:start"
+    "dev:emulator": "firebase emulators:exec 'npm run serve' --ui",
+    "cy:open": "NODE_ENV=devlopment FIRESTORE_EMULATOR_HOST=localhost:8081 FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 FIREBASE_STORAGE_EMULATOR_HOST=localhost:9199 cypress open",
+    "cy:run": "NODE_ENV=devlopment FIRESTORE_EMULATOR_HOST=localhost:8081 FIREBASE_AUTH_EMULATOR_HOST=localhost:9099 FIREBASE_STORAGE_EMULATOR_HOST=localhost:9199 cypress run"
   },
   "dependencies": {
     "axios": "^0.19.2",
