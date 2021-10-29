@@ -144,6 +144,24 @@ This project was created with Vue, Firebase and Vuetify.
 
 3. You can change the major color setting in `/src/plugins/vuetify.js`
 
+## Testing
+
+Tests are built with [Cypress](https://docs.cypress.io/guides/overview/why-cypress) and [Firebase emulator](https://firebase.google.com/docs/emulator-suite). 
+
+1. To start testing, run the following command to start Firebase emulator which runs Firebase functions locally: 
+   ```
+   npm run dev:emulator
+   ```
+   
+2. Test with cypress with UI:
+   ```
+   npm run cy:open
+   ```
+   or without UI:
+   ```
+   npm run cy:run
+   ```
+
 ## Deployment
 
 1. Build the production:
@@ -162,7 +180,9 @@ This project was created with Vue, Firebase and Vuetify.
 
 ## Built with
 
+- Cypress
 - Firebase
+- Firebase Emulator Suite
 - Github Action
 - GitHub API v3 and v4
 - Vue.js
