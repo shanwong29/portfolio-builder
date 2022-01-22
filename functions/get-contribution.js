@@ -15,7 +15,7 @@ exports.getContribution = functions.https.onCall(async (data, context) => {
       user(login: "${data.loginName}") {
         repositoriesContributedTo(last: 10) {
           nodes {
-            languages(first: 1) {
+            languages(first: 1, orderBy: {field: SIZE, direction: DESC}){
               nodes {
                 color
                 name
