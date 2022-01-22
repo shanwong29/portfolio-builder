@@ -18,7 +18,11 @@ let firebaseConfig = {
 };
 
 const config = isTestEnv
-  ? { projectId: "shanwong", apiKey: "fake-api-key", storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET }
+  ? {
+      projectId: process.env.VUE_APP_FIREBASE_PROJECT_ID,
+      apiKey: "fake-api-key",
+      storageBucket: process.env.VUE_APP_FIREBASE_STORAGE_BUCKET
+    }
   : firebaseConfig;
 
 if (!initialized) {
